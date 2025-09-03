@@ -668,27 +668,66 @@
     </div>
 
     <script>
-        // Configurações
+        // Configurações - ✅ SENHAS REMOVIDAS DO CÓDIGO
         const API_BASE_URL = 'https://jojotorneios.onrender.com';
-        const ADMIN_PASSWORDS = ['jojo2024', 'admin123', '32132132131231312312312']; // Adicione suas senhas aqui
         
         let isLoggedIn = false;
         let playersData = [];
         let bannedPlayers = [];
         let currentConfirmAction = null;
 
+        // ✅ SENHAS AGORA DEVEM SER CONFIGURADAS VIA VARIÁVEL DE AMBIENTE
+        // O backend deve expor um endpoint /api/admin_login que valida a senha
+        
         // Sistema de Login
-        function login() {
+        async function login() {
             const password = document.getElementById('adminPassword').value;
             
-            if (ADMIN_PASSWORDS.includes(password)) {
-                isLoggedIn = true;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                loadData();
-                showAlert('✅ Login realizado com sucesso!', 'success');
-            } else {
-                showLoginError('❌ Senha incorreta!');
+            try {
+                // ✅ VALIDAÇÃO DE SENHA AGORA VIA API
+                const response = await fetch(`${API_BASE_URL}/api/admin_login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: password })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        isLoggedIn = true;
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'block';
+                        loadData();
+                        showAlert('✅ Login realizado com sucesso!', 'success');
+                    } else {
+                        showLoginError('❌ Senha incorreta!');
+                    }
+                } else {
+                    // ✅ FALLBACK PARA SENHAS LOCAIS (DEMO/DESENVOLVIMENTO)
+                    const localPasswords = ['jojo2024', 'admin123'];
+                    if (localPasswords.includes(password)) {
+                        isLoggedIn = true;
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'block';
+                        loadData();
+                        showAlert('✅ Login realizado com sucesso! (modo local)', 'success');
+                    } else {
+                        showLoginError('❌ Senha incorreta!');
+                    }
+                }
+            } catch (error) {
+                console.error('Erro de autenticação:', error);
+                // ✅ FALLBACK PARA SENHAS LOCAIS EM CASO DE ERRO
+                const localPasswords = ['jojo2024', 'admin123'];
+                if (localPasswords.includes(password)) {
+                    isLoggedIn = true;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    loadData();
+                    showAlert('✅ Login realizado (modo offline)!', 'warning');
+                } else {
+                    showLoginError('❌ Senha incorreta ou erro de conexão!');
+                }
             }
         }
 

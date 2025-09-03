@@ -1346,9 +1346,11 @@
         });
 
         document.getElementById('historySearch').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            // Implementar filtro de histórico aqui
-            loadNickHistory();
+            // ✅ RECARREGA O HISTÓRICO COM O FILTRO DE BUSCA
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                loadNickHistory();
+            }, 500); // Delay de 500ms para evitar muitas requisições
         });
 
         // Event Listeners para Login

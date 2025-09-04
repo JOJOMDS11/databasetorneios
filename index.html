@@ -7,64 +7,64 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🟣</text></svg>">
     <style>
         * {
-            margin: 0;
-            padding: 0;
+            [cite_start]margin: 0; [cite: 283]
+            [cite_start]padding: 0; [cite: 284]
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            [cite_start]font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; [cite: 285]
+            [cite_start]background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); [cite: 285]
             min-height: 100vh;
-            color: #333;
+            [cite_start]color: #333; [cite: 286]
         }
 
         /* Login Screen */
         .login-container {
-            display: flex;
-            justify-content: center;
+            [cite_start]display: flex; [cite: 287]
+            [cite_start]justify-content: center; [cite: 287]
             align-items: center;
             min-height: 100vh;
             padding: 20px;
         }
 
         .login-box {
-            background: rgba(255,255,255,0.95);
-            padding: 40px;
+            [cite_start]background: rgba(255,255,255,0.95); [cite: 288]
+            [cite_start]padding: 40px; [cite: 288]
             border-radius: 20px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.3);
             width: 100%;
             max-width: 400px;
-            text-align: center;
+            [cite_start]text-align: center; [cite: 289]
         }
 
         .login-title {
-            font-size: 2rem;
-            color: #667eea;
+            [cite_start]font-size: 2rem; [cite: 290]
+            [cite_start]color: #667eea; [cite: 290]
             margin-bottom: 30px;
             font-weight: bold;
         }
 
         .login-input {
-            width: 100%;
-            padding: 15px;
+            [cite_start]width: 100%; [cite: 291]
+            [cite_start]padding: 15px; [cite: 291]
             margin-bottom: 20px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            [cite_start]transition: border-color 0.3s ease; [cite: 292]
         }
 
         .login-input:focus {
-            outline: none;
-            border-color: #667eea;
+            [cite_start]outline: none; [cite: 293]
+            [cite_start]border-color: #667eea; [cite: 293]
         }
 
         .login-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            [cite_start]width: 100%; [cite: 294]
+            [cite_start]background: linear-gradient(135deg, #667eea, #764ba2); [cite: 294]
             color: white;
             border: none;
             padding: 15px;
@@ -72,38 +72,38 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: bold;
+            [cite_start]font-weight: bold; [cite: 295]
         }
 
         .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            [cite_start]transform: translateY(-2px); [cite: 296]
+            [cite_start]box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); [cite: 296]
         }
 
         /* Dashboard */
         .dashboard {
-            display: none;
+            [cite_start]display: none; [cite: 297]
         }
 
         .header {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            [cite_start]background: rgba(255,255,255,0.1); [cite: 298]
+            [cite_start]backdrop-filter: blur(10px); [cite: 298]
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.2);
-            position: relative;
+            [cite_start]position: relative; [cite: 299]
         }
 
         .header h1 {
-            color: white;
-            font-size: 2.5rem;
+            [cite_start]color: white; [cite: 300]
+            [cite_start]font-size: 2.5rem; [cite: 300]
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .logout-btn {
-            position: absolute;
-            top: 20px;
+            [cite_start]position: absolute; [cite: 301]
+            [cite_start]top: 20px; [cite: 301]
             right: 20px;
             background: rgba(255,255,255,0.2);
             color: white;
@@ -111,31 +111,31 @@
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            [cite_start]transition: all 0.3s ease; [cite: 302]
         }
 
         .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
+            [cite_start]background: rgba(255,255,255,0.3); [cite: 303]
         }
 
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            [cite_start]max-width: 1400px; [cite: 304]
+            [cite_start]margin: 0 auto; [cite: 304]
             padding: 20px;
         }
 
         .nav-tabs {
-            display: flex;
-            background: rgba(255,255,255,0.1);
+            [cite_start]display: flex; [cite: 305]
+            [cite_start]background: rgba(255,255,255,0.1); [cite: 305]
             border-radius: 15px;
             padding: 5px;
             margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+            [cite_start]backdrop-filter: blur(10px); [cite: 306]
         }
 
         .nav-tab {
-            flex: 1;
-            background: transparent;
+            [cite_start]flex: 1; [cite: 307]
+            [cite_start]background: transparent; [cite: 307]
             color: white;
             border: none;
             padding: 15px;
@@ -143,342 +143,389 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1rem;
-            font-weight: bold;
+            [cite_start]font-weight: bold; [cite: 308]
         }
 
         .nav-tab.active {
-            background: rgba(255,255,255,0.9);
-            color: #667eea;
+            [cite_start]background: rgba(255,255,255,0.9); [cite: 309]
+            [cite_start]color: #667eea; [cite: 309]
         }
 
         .tab-content {
-            display: none;
+            [cite_start]display: none; [cite: 310]
         }
 
         .tab-content.active {
-            display: block;
+            [cite_start]display: block; [cite: 311]
         }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            [cite_start]display: grid; [cite: 312]
+            [cite_start]grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); [cite: 312]
             gap: 20px;
             margin-bottom: 30px;
         }
 
         .stat-card {
-            background: rgba(255,255,255,0.95);
-            padding: 25px;
+            [cite_start]background: rgba(255,255,255,0.95); [cite: 313]
+            [cite_start]padding: 25px; [cite: 313]
             border-radius: 15px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.3);
             text-align: center;
-            transition: transform 0.3s ease;
+            [cite_start]transition: transform 0.3s ease; [cite: 314]
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            [cite_start]transform: translateY(-5px); [cite: 315]
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
+            [cite_start]font-size: 2.5rem; [cite: 316]
+            [cite_start]font-weight: bold; [cite: 316]
             color: #667eea;
             margin-bottom: 10px;
         }
 
         .stat-label {
-            font-size: 1.1rem;
-            color: #666;
+            [cite_start]font-size: 1.1rem; [cite: 317]
+            [cite_start]color: #666; [cite: 317]
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
+            [cite_start]background: rgba(255,255,255,0.95); [cite: 318]
+            [cite_start]border-radius: 15px; [cite: 318]
             padding: 25px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            [cite_start]margin-bottom: 20px; [cite: 319]
         }
 
         .card-header {
-            display: flex;
-            justify-content: space-between;
+            [cite_start]display: flex; [cite: 320]
+            [cite_start]justify-content: space-between; [cite: 320]
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            [cite_start]border-bottom: 2px solid #f0f0f0; [cite: 321]
         }
 
         .card-title {
-            font-size: 1.5rem;
-            color: #333;
+            [cite_start]font-size: 1.5rem; [cite: 322]
+            [cite_start]color: #333; [cite: 322]
             font-weight: bold;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            [cite_start]background: linear-gradient(135deg, #667eea, #764ba2); [cite: 323]
+            [cite_start]color: white; [cite: 323]
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s ease;
-            margin: 5px;
+            [cite_start]margin: 5px; [cite: 324]
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            [cite_start]transform: translateY(-2px); [cite: 325]
+            [cite_start]box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); [cite: 325]
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ff4757, #ff3838);
+            [cite_start]background: linear-gradient(135deg, #ff4757, #ff3838); [cite: 326]
         }
 
         .btn-danger:hover {
-            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+            [cite_start]box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); [cite: 327]
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #2ed573, #2ed573);
+            [cite_start]background: linear-gradient(135deg, #2ed573, #2ed573); [cite: 328]
         }
 
         .btn-success:hover {
-            box-shadow: 0 5px 15px rgba(46, 213, 115, 0.4);
+            [cite_start]box-shadow: 0 5px 15px rgba(46, 213, 115, 0.4); [cite: 329]
         }
 
         .search-bar {
-            width: 100%;
-            padding: 12px 20px;
+            [cite_start]width: 100%; [cite: 330]
+            [cite_start]padding: 12px 20px; [cite: 330]
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
             margin-bottom: 20px;
-            transition: border-color 0.3s ease;
+            [cite_start]transition: border-color 0.3s ease; [cite: 331]
         }
 
         .search-bar:focus {
-            outline: none;
-            border-color: #667eea;
+            [cite_start]outline: none; [cite: 332]
+            [cite_start]border-color: #667eea; [cite: 332]
         }
 
         table {
-            width: 100%;
-            border-collapse: collapse;
+            [cite_start]width: 100%; [cite: 333]
+            [cite_start]border-collapse: collapse; [cite: 333]
             margin-top: 10px;
         }
 
         th, td {
-            padding: 15px;
-            text-align: left;
+            [cite_start]padding: 15px; [cite: 334]
+            [cite_start]text-align: left; [cite: 334]
             border-bottom: 1px solid #f0f0f0;
         }
 
         th {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-weight: bold;
+            [cite_start]background: linear-gradient(135deg, #f8f9fa, #e9ecef); [cite: 335]
+            [cite_start]font-weight: bold; [cite: 335]
             color: #495057;
             text-transform: uppercase;
             font-size: 0.9rem;
-            letter-spacing: 0.5px;
+            [cite_start]letter-spacing: 0.5px; [cite: 336]
         }
 
         tr:hover {
-            background-color: rgba(102, 126, 234, 0.1);
+            [cite_start]background-color: rgba(102, 126, 234, 0.1); [cite: 337]
         }
 
         .badge {
-            display: inline-block;
-            padding: 4px 8px;
+            [cite_start]display: inline-block; [cite: 338]
+            [cite_start]padding: 4px 8px; [cite: 338]
             border-radius: 4px;
             font-size: 0.8rem;
             font-weight: bold;
-            text-transform: uppercase;
+            [cite_start]text-transform: uppercase; [cite: 339]
         }
 
         .badge-success {
-            background-color: #d4edda;
-            color: #155724;
+            [cite_start]background-color: #d4edda; [cite: 340]
+            [cite_start]color: #155724; [cite: 340]
         }
 
         .badge-danger {
-            background-color: #f8d7da;
-            color: #721c24;
+            [cite_start]background-color: #f8d7da; [cite: 341]
+            [cite_start]color: #721c24; [cite: 341]
         }
 
         .badge-warning {
-            background-color: #fff3cd;
-            color: #856404;
+            [cite_start]background-color: #fff3cd; [cite: 342]
+            [cite_start]color: #856404; [cite: 342]
         }
 
         .modal {
-            display: none;
-            position: fixed;
+            [cite_start]display: none; [cite: 343]
+            [cite_start]position: fixed; [cite: 343]
             z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            [cite_start]background-color: rgba(0,0,0,0.5); [cite: 344]
         }
 
         .modal-content {
-            background-color: white;
-            margin: 10% auto;
+            [cite_start]background-color: white; [cite: 345]
+            [cite_start]margin: 10% auto; [cite: 345]
             padding: 30px;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            [cite_start]box-shadow: 0 15px 50px rgba(0,0,0,0.3); [cite: 346]
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
+            [cite_start]display: flex; [cite: 347]
+            [cite_start]justify-content: space-between; [cite: 347]
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
+            [cite_start]border-bottom: 2px solid #f0f0f0; [cite: 348]
         }
 
         .close {
-            color: #aaa;
-            font-size: 28px;
+            [cite_start]color: #aaa; [cite: 349]
+            [cite_start]font-size: 28px; [cite: 349]
             font-weight: bold;
             cursor: pointer;
             line-height: 1;
         }
 
         .close:hover {
-            color: #000;
+            [cite_start]color: #000; [cite: 350]
         }
 
         .form-group {
-            margin-bottom: 20px;
+            [cite_start]margin-bottom: 20px; [cite: 351]
         }
 
         .form-label {
-            display: block;
-            margin-bottom: 5px;
+            [cite_start]display: block; [cite: 352]
+            [cite_start]margin-bottom: 5px; [cite: 352]
             font-weight: bold;
             color: #333;
         }
 
         .form-input {
-            width: 100%;
-            padding: 12px;
+            [cite_start]width: 100%; [cite: 353]
+            [cite_start]padding: 12px; [cite: 353]
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 1rem;
+            [cite_start]font-size: 1rem; [cite: 354]
         }
 
         .form-input:focus {
-            outline: none;
-            border-color: #667eea;
+            [cite_start]outline: none; [cite: 355]
+            [cite_start]border-color: #667eea; [cite: 355]
         }
 
         .alert {
-            padding: 15px;
-            border-radius: 8px;
+            [cite_start]padding: 15px; [cite: 356]
+            [cite_start]border-radius: 8px; [cite: 356]
             margin: 15px 0;
         }
 
         .alert-success {
-            background: #d4edda;
-            color: #155724;
+            [cite_start]background: #d4edda; [cite: 357]
+            [cite_start]color: #155724; [cite: 357]
             border: 1px solid #c3e6cb;
         }
 
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
+            [cite_start]background: #f8d7da; [cite: 358]
+            [cite_start]color: #721c24; [cite: 358]
             border: 1px solid #f5c6cb;
         }
 
         .alert-warning {
-            background: #fff3cd;
-            color: #856404;
+            [cite_start]background: #fff3cd; [cite: 359]
+            [cite_start]color: #856404; [cite: 359]
             border: 1px solid #ffeaa7;
         }
 
         .loading {
-            text-align: center;
-            padding: 50px;
+            [cite_start]text-align: center; [cite: 360]
+            [cite_start]padding: 50px; [cite: 360]
             font-size: 1.2rem;
             color: #666;
         }
 
         .action-buttons {
-            display: flex;
-            gap: 5px;
+            [cite_start]display: flex; [cite: 361]
+            [cite_start]gap: 5px; [cite: 361]
         }
 
         .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.8rem;
+            [cite_start]padding: 5px 10px; [cite: 362]
+            [cite_start]font-size: 0.8rem; [cite: 362]
         }
 
         .history-item {
-            background: #f8f9fa;
-            padding: 15px;
+            [cite_start]background: #f8f9fa; [cite: 363]
+            [cite_start]padding: 15px; [cite: 363]
             border-radius: 8px;
             margin-bottom: 10px;
-            border-left: 4px solid #667eea;
+            [cite_start]border-left: 4px solid #667eea; [cite: 364]
         }
 
         .history-date {
-            color: #666;
-            font-size: 0.9rem;
+            [cite_start]color: #666; [cite: 365]
+            [cite_start]font-size: 0.9rem; [cite: 365]
         }
 
         .history-action {
+            [cite_start]font-weight: bold; [cite: 366]
+            [cite_start]margin: 5px 0; [cite: 366]
+        }
+        
+        .log-item {
+            [cite_start]background: #fff; [cite: 367]
+            [cite_start]border: 1px solid #e0e0e0; [cite: 367]
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            [cite_start]transition: all 0.3s ease; [cite: 368]
+        }
+
+        .log-item:hover {
+            [cite_start]box-shadow: 0 2px 8px rgba(0,0,0,0.1); [cite: 369]
+        }
+
+        .log-header {
+            [cite_start]display: flex; [cite: 370]
+            [cite_start]justify-content: space-between; [cite: 370]
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .log-type {
+            [cite_start]font-size: 0.8rem; [cite: 371]
+            [cite_start]padding: 4px 8px; [cite: 371]
+            border-radius: 4px;
             font-weight: bold;
-            margin: 5px 0;
+        }
+
+        .log-type.warning {
+            [cite_start]background: #fff3cd; [cite: 372]
+            [cite_start]color: #856404; [cite: 372]
+        }
+
+        .log-type.error {
+            [cite_start]background: #f8d7da; [cite: 373]
+            [cite_start]color: #721c24; [cite: 373]
+        }
+
+        .log-type.success {
+            [cite_start]background: #d4edda; [cite: 374]
+            [cite_start]color: #155724; [cite: 374]
+        }
+
+        .no-results {
+            [cite_start]text-align: center; [cite: 375]
+            [cite_start]padding: 40px; [cite: 375]
+            color: #666;
+            font-style: italic;
         }
 
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 2rem;
+                [cite_start]font-size: 2rem; [cite: 376]
             }
             
             .stats-grid {
-                grid-template-columns: 1fr;
+                [cite_start]grid-template-columns: 1fr; [cite: 377]
             }
             
             .nav-tabs {
-                flex-direction: column;
+                [cite_start]flex-direction: column; [cite: 378]
             }
             
             table {
-                font-size: 0.9rem;
+                [cite_start]font-size: 0.9rem; [cite: 379]
             }
             
             th, td {
-                padding: 10px;
+                [cite_start]padding: 10px; [cite: 380]
             }
 
             .action-buttons {
-                flex-direction: column;
+                [cite_start]flex-direction: column; [cite: 381]
             }
         }
     </style>
 </head>
 <body>
-    <!-- Tela de Login -->
     <div id="loginScreen" class="login-container">
         <div class="login-box">
             <div class="login-title">🟣 ADMIN LOGIN</div>
             <input type="password" id="adminPassword" class="login-input" placeholder="Senha de Admin" maxlength="50">
             <button onclick="login()" class="login-btn">🔐 Entrar</button>
-            <div id="loginError" class="alert alert-error" style="display: none;"></div>
+            [cite_start]<div id="loginError" class="alert alert-error" style="display: none;"></div> [cite: 382]
         </div>
     </div>
 
-    <!-- Dashboard Principal -->
     <div id="dashboard" class="dashboard">
         <div class="header">
             <h1>🟣 JOJO TORNEIOS - ADMIN 🟣</h1>
@@ -486,181 +533,172 @@
         </div>
 
         <div class="container">
-            <!-- Navegação por Abas -->
+            [cite_start][cite: 383]
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="showTab('overview')">📊 Visão Geral</button>
                 <button class="nav-tab" onclick="showTab('players')">👥 Jogadores</button>
                 <button class="nav-tab" onclick="showTab('bans')">🚫 Banimentos</button>
                 <button class="nav-tab" onclick="showTab('history')">📋 Histórico</button>
-                <button class="nav-tab" onclick="showTab('logs')">📝 Logs</button>
+                [cite_start]<button class="nav-tab" onclick="showTab('logs')">📝 Logs</button> [cite: 384]
             </div>
 
-            <!-- Aba Visão Geral -->
             <div id="overview" class="tab-content active">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" id="totalPlayers">-</div>
+                        [cite_start]<div class="stat-number" id="totalPlayers">-</div> [cite: 385]
                         <div class="stat-label">Jogadores Registrados</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="totalLogins">-</div>
-                        <div class="stat-label">Total de Logins</div>
+                        [cite_start]<div class="stat-number" id="totalLogs">-</div> [cite: 386]
+                        <div class="stat-label">Total de Logs</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="successRate">-</div>
+                        [cite_start]<div class="stat-number" id="successRate">-</div> [cite: 387]
                         <div class="stat-label">Taxa de Sucesso</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="totalBans">-</div>
-                        <div class="stat-label">Jogadores Banidos</div>
+                        [cite_start]<div class="stat-label">Jogadores Banidos</div> [cite: 388]
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">⚡ Ações Rápidas</div>
+                        [cite_start]<div class="card-title">⚡ Ações Rápidas</div> [cite: 389]
                         <button onclick="loadData()" class="btn">🔄 Atualizar Dados</button>
                     </div>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    [cite_start]<div style="display: flex; gap: 15px; flex-wrap: wrap;"> [cite: 390]
                         <button onclick="showTab('players')" class="btn">👥 Gerenciar Jogadores</button>
                         <button onclick="showTab('bans')" class="btn">🚫 Gerenciar Bans</button>
                         <button onclick="clearAllBans()" class="btn btn-danger">🗑️ Limpar Todos os Bans</button>
                         <button onclick="exportData()" class="btn">📥 Exportar Dados</button>
-                    </div>
+                    [cite_start]</div> [cite: 391]
                 </div>
             </div>
 
-            <!-- Aba Jogadores -->
             <div id="players" class="tab-content">
                 <div class="card">
-                    <div class="card-header">
+                    [cite_start]<div class="card-header"> [cite: 392]
                         <div class="card-title">👥 Gerenciar Jogadores</div>
                         <button onclick="loadPlayers()" class="btn">🔄 Atualizar</button>
                     </div>
                     
-                    <input type="text" class="search-bar" placeholder="🔍 Pesquisar por Discord ou Nick do Haxball..." id="playersSearch">
+                    [cite_start]<input type="text" class="search-bar" placeholder="🔍 Pesquisar por Discord ou Nick do Haxball..." id="playersSearch"> [cite: 393]
                     
                     <div id="playersLoading" class="loading">Carregando jogadores...</div>
                     
-                    <table id="playersTable" style="display: none;">
-                        <thead>
+                    [cite_start]<table id="playersTable" style="display: none;"> [cite: 394]
+                        [cite_start]<thead> [cite: 395]
                             <tr>
                                 <th>ID</th>
                                 <th>Discord</th>
-                                <th>Nick Haxball</th>
+                                [cite_start]<th>Nick Haxball</th> [cite: 396]
                                 <th>Registrado</th>
                                 <th>Status</th>
-                                <th>Ações</th>
+                                [cite_start]<th>Ações</th> [cite: 397]
                             </tr>
                         </thead>
                         <tbody id="playersBody">
-                        </tbody>
+                        [cite_start]</tbody> [cite: 398]
                     </table>
                 </div>
             </div>
 
-            <!-- Aba Banimentos -->
             <div id="bans" class="tab-content">
-                <div class="card">
+                [cite_start]<div class="card"> [cite: 399]
                     <div class="card-header">
                         <div class="card-title">🚫 Jogadores Banidos</div>
                         <div>
-                            <button onclick="loadBannedPlayers()" class="btn">🔄 Atualizar</button>
+                            [cite_start]<button onclick="loadBannedPlayers()" class="btn">🔄 Atualizar</button> [cite: 400]
                             <button onclick="showBanModal()" class="btn btn-danger">🚫 Banir Jogador</button>
                         </div>
                     </div>
                     
-                    <input type="text" class="search-bar" placeholder="🔍 Pesquisar jogador banido..." id="bansSearch">
+                    [cite_start]<input type="text" class="search-bar" placeholder="🔍 Pesquisar jogador banido..." id="bansSearch"> [cite: 401]
                     
                     <div id="bansLoading" class="loading">Carregando banidos...</div>
                     
-                    <table id="bansTable" style="display: none;">
-                        <thead>
+                    [cite_start]<table id="bansTable" style="display: none;"> [cite: 402]
+                        [cite_start]<thead> [cite: 403]
                             <tr>
                                 <th>Discord</th>
                                 <th>Nick Haxball</th>
-                                <th>Banido em</th>
+                                [cite_start]<th>Banido em</th> [cite: 404]
                                 <th>Motivo</th>
                                 <th>Ações</th>
-                            </tr>
+                            [cite_start]</tr> [cite: 405]
                         </thead>
                         <tbody id="bansBody">
                         </tbody>
-                    </table>
+                    [cite_start]</table> [cite: 406]
                 </div>
             </div>
 
-            <!-- Aba Histórico -->
             <div id="history" class="tab-content">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">📋 Histórico de Mudanças de Nick</div>
-                        <button onclick="loadNickHistory()" class="btn">🔄 Atualizar</button>
+                    [cite_start]<div class="card-header"> [cite: 407]
+                        <div class="card-title">📋 Histórico de Ações dos Jogadores</div>
+                        <button onclick="loadPlayerHistory()" class="btn">🔄 Atualizar</button>
                     </div>
                     
-                    <input type="text" class="search-bar" placeholder="🔍 Pesquisar por nick antigo ou novo..." id="historySearch">
+                    [cite_start]<input type="text" class="search-bar" placeholder="🔍 Pesquisar por nick ou ação..." id="historySearch"> [cite: 408]
                     
                     <div id="historyLoading" class="loading">Carregando histórico...</div>
                     <div id="historyContent"></div>
-                </div>
+                [cite_start]</div> [cite: 409]
             </div>
 
-            <!-- Aba Logs -->
             <div id="logs" class="tab-content">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">📝 Logs de Atividade</div>
-                        <button onclick="loadLogs()" class="btn">🔄 Atualizar</button>
+                        [cite_start]<div class="card-title">📝 Logs do Sistema</div> [cite: 410]
+                        <button onclick="loadSystemLogs()" class="btn">🔄 Atualizar</button>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
+                    [cite_start]<div style="margin-bottom: 20px;"> [cite: 411]
                         <select id="logFilter" class="form-input" style="width: auto; display: inline-block; margin-right: 10px;">
-                            <option value="all">Todos os Logs</option>
-                            <option value="login">Tentativas de Login</option>
-                            <option value="register">Registros</option>
-                            <option value="ban">Banimentos</option>
+                            [cite_start]<option value="all">Todos os Logs</option> [cite: 412]
+                            <option value="warning">Banimentos Manuais</option>
+                            <option value="success">Registros</option>
                         </select>
-                        <input type="date" id="logDate" class="form-input" style="width: auto; display: inline-block;">
-                    </div>
+                    [cite_start]</div> [cite: 413]
                     
                     <div id="logsLoading" class="loading">Carregando logs...</div>
                     <div id="logsContent"></div>
                 </div>
             </div>
-        </div>
+        [cite_start]</div> [cite: 414]
     </div>
 
-    <!-- Modal para Banir Jogador -->
     <div id="banModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>🚫 Banir Jogador</h3>
                 <span class="close" onclick="closeBanModal()">&times;</span>
             </div>
-            <div class="form-group">
-                <label class="form-label">Nick do Haxball ou Discord:</label>
+            [cite_start]<div class="form-group"> [cite: 415]
+                <label class="form-label">Nick do Haxball ou Discord</label>
                 <input type="text" id="banPlayerName" class="form-input" placeholder="Digite o nick ou nome do Discord">
             </div>
             <div class="form-group">
-                <label class="form-label">Motivo do Ban:</label>
-                <input type="text" id="banReason" class="form-input" placeholder="Ex: Comportamento inadequado">
+                <label class="form-label">Motivo do Ban</label>
+                [cite_start]<input type="text" id="banReason" class="form-input" placeholder="Ex: Comportamento inadequado"> [cite: 416]
             </div>
             <div style="text-align: center;">
-                <button onclick="banPlayer()" class="btn btn-danger">🚫 Confirmar Ban</button>
+                [cite_start]<button onclick="banPlayer()" class="btn btn-danger">🚫 Confirmar Ban</button> [cite: 417]
                 <button onclick="closeBanModal()" class="btn">❌ Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Confirmação -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="confirmTitle">⚠️ Confirmar Ação</h3>
+                [cite_start]<h3 id="confirmTitle">⚠️ Confirmar Ação</h3> [cite: 418]
                 <span class="close" onclick="closeConfirmModal()">&times;</span>
             </div>
             <p id="confirmMessage"></p>
-            <div style="text-align: center; margin-top: 20px;">
+            [cite_start]<div style="text-align: center; margin-top: 20px;"> [cite: 419]
                 <button id="confirmBtn" class="btn btn-danger">Confirmar</button>
                 <button onclick="closeConfirmModal()" class="btn">Cancelar</button>
             </div>
@@ -668,358 +706,436 @@
     </div>
 
     <script>
-        // Configurações - ✅ SENHAS REMOVIDAS DO CÓDIGO
+        // Configurações
         const API_BASE_URL = 'https://jojotorneios.onrender.com';
-        
-        let isLoggedIn = false;
+        [cite_start]let isLoggedIn = false; [cite: 420]
         let playersData = [];
         let bannedPlayers = [];
         let currentConfirmAction = null;
 
-        // ✅ SENHAS AGORA DEVEM SER CONFIGURADAS VIA VARIÁVEL DE AMBIENTE
-        // O backend deve expor um endpoint /api/admin_login que valida a senha
-        
         // Sistema de Login
         async function login() {
             const password = document.getElementById('adminPassword').value;
-            
-            try {
-                // ✅ VALIDAÇÃO DE SENHA AGORA VIA API
+            [cite_start]try { [cite: 422]
                 const response = await fetch(`${API_BASE_URL}/api/admin_login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password: password })
-                });
+                [cite_start]}); [cite: 423]
                 
                 if (response.ok) {
                     const result = await response.json();
-                    if (result.success) {
+                    [cite_start]if (result.success) { [cite: 424]
                         isLoggedIn = true;
-                        document.getElementById('loginScreen').style.display = 'none';
+                        [cite_start]document.getElementById('loginScreen').style.display = 'none'; [cite: 425]
                         document.getElementById('dashboard').style.display = 'block';
                         loadData();
-                        showAlert('✅ Login realizado com sucesso!', 'success');
+                        [cite_start]showAlert('✅ Login realizado com sucesso!', 'success'); [cite: 426]
                     } else {
-                        showLoginError('❌ Senha incorreta!');
+                        [cite_start]showLoginError('❌ Senha incorreta!'); [cite: 427]
                     }
                 } else {
-                    // ✅ FALLBACK PARA SENHAS LOCAIS (DEMO/DESENVOLVIMENTO)
                     const localPasswords = ['jojo2024', 'admin123'];
-                    if (localPasswords.includes(password)) {
+                    [cite_start]if (localPasswords.includes(password)) { [cite: 428]
                         isLoggedIn = true;
-                        document.getElementById('loginScreen').style.display = 'none';
+                        [cite_start]document.getElementById('loginScreen').style.display = 'none'; [cite: 429]
                         document.getElementById('dashboard').style.display = 'block';
                         loadData();
-                        showAlert('✅ Login realizado com sucesso! (modo local)', 'success');
+                        [cite_start]showAlert('✅ Login realizado com sucesso! (modo local)', 'success'); [cite: 430]
                     } else {
-                        showLoginError('❌ Senha incorreta!');
+                        [cite_start]showLoginError('❌ Senha incorreta!'); [cite: 431]
                     }
                 }
             } catch (error) {
-                console.error('Erro de autenticação:', error);
-                // ✅ FALLBACK PARA SENHAS LOCAIS EM CASO DE ERRO
+                [cite_start]console.error('Erro de autenticação:', error); [cite: 432]
                 const localPasswords = ['jojo2024', 'admin123'];
                 if (localPasswords.includes(password)) {
                     isLoggedIn = true;
-                    document.getElementById('loginScreen').style.display = 'none';
+                    [cite_start]document.getElementById('loginScreen').style.display = 'none'; [cite: 433]
                     document.getElementById('dashboard').style.display = 'block';
                     loadData();
-                    showAlert('✅ Login realizado (modo offline)!', 'warning');
+                    [cite_start]showAlert('✅ Login realizado (modo offline)!', 'warning'); [cite: 434]
                 } else {
-                    showLoginError('❌ Senha incorreta ou erro de conexão!');
+                    [cite_start]showLoginError('❌ Senha incorreta ou erro de conexão!'); [cite: 435]
                 }
             }
         }
 
         function logout() {
             isLoggedIn = false;
-            document.getElementById('dashboard').style.display = 'none';
+            [cite_start]document.getElementById('dashboard').style.display = 'none'; [cite: 436]
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('adminPassword').value = '';
         }
 
         function showLoginError(message) {
             const errorDiv = document.getElementById('loginError');
-            errorDiv.textContent = message;
+            [cite_start]errorDiv.textContent = message; [cite: 437]
             errorDiv.style.display = 'block';
             setTimeout(() => {
                 errorDiv.style.display = 'none';
-            }, 3000);
+            [cite_start]}, 3000); [cite: 438]
         }
 
         // Navegação por Abas
         function showTab(tabName) {
-            // Remove active de todas as abas
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            [cite_start]document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active')); [cite: 439]
             
-            // Ativa a aba clicada
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
             
-            // Carrega dados específicos da aba
             switch(tabName) {
                 case 'players':
-                    loadPlayers();
+                    [cite_start]loadPlayers(); [cite: 440]
                     break;
                 case 'bans':
-                    loadBannedPlayers();
+                    [cite_start]loadBannedPlayers(); [cite: 441]
                     break;
                 case 'history':
-                    loadNickHistory();
+                    [cite_start]loadPlayerHistory(); [cite: 442]
                     break;
                 case 'logs':
-                    loadLogs();
+                    [cite_start]loadSystemLogs(); [cite: 443]
                     break;
             }
         }
 
-        // Carregamento de Dados
+        // Carregamento de Dados com APIs REAIS
         async function loadData() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/stats`);
+                [cite_start]const response = await fetch(`${API_BASE_URL}/api/stats`); [cite: 444]
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
-                        updateStats(data.stats);
+                        [cite_start]updateStats(data.stats); [cite: 552]
                     }
                 }
             } catch (error) {
-                console.error('Erro ao carregar estatísticas:', error);
-                // Usa dados simulados se API não responder
-                updateStats({
-                    total_players: '150+',
-                    total_logins: '1200+', 
-                    success_rate: '85%',
-                    total_bans: '5+'
-                });
+                [cite_start]console.error('Erro ao carregar estatísticas:', error); [cite: 553]
             }
         }
-
+        
         async function loadPlayers() {
-            showLoading('playersLoading');
-            hideTable('playersTable');
+            [cite_start]showLoading('playersLoading'); [cite: 554]
+            [cite_start]hideTable('playersTable'); [cite: 554]
             
             try {
-                const response = await fetch(`${API_BASE_URL}/api/players`);
+                [cite_start]const response = await fetch(`${API_BASE_URL}/api/players`); [cite: 555]
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.success) {
+                    [cite_start]if (data.success) { [cite: 556]
                         playersData = data.players;
-                        renderPlayersTable(playersData);
+                        [cite_start]renderPlayersTable(playersData); [cite: 557]
                     }
-                } else {
-                    throw new Error('API não disponível');
                 }
             } catch (error) {
-                console.error('Erro ao carregar jogadores:', error);
-                // Dados simulados para demonstração
-                playersData = generateMockPlayers();
-                renderPlayersTable(playersData);
+                [cite_start]console.error('Erro ao carregar jogadores:', error); [cite: 558]
             }
             
-            hideLoading('playersLoading');
-            showTable('playersTable');
+            [cite_start]hideLoading('playersLoading'); [cite: 559]
+            [cite_start]showTable('playersTable'); [cite: 559]
         }
 
         async function loadBannedPlayers() {
-            showLoading('bansLoading');
-            hideTable('bansTable');
+            [cite_start]showLoading('bansLoading'); [cite: 560]
+            [cite_start]hideTable('bansTable'); [cite: 560]
             
             try {
-                // Simula carregamento de jogadores banidos
                 bannedPlayers = playersData.filter(p => p.banned);
-                renderBannedTable(bannedPlayers);
+                [cite_start]renderBannedTable(bannedPlayers); [cite: 561]
             } catch (error) {
-                console.error('Erro ao carregar banidos:', error);
+                [cite_start]console.error('Erro ao carregar banidos:', error); [cite: 562]
             }
             
-            hideLoading('bansLoading');
-            showTable('bansTable');
+            [cite_start]hideLoading('bansLoading'); [cite: 563]
+            [cite_start]showTable('bansTable'); [cite: 563]
         }
 
-        async function loadNickHistory() {
-            document.getElementById('historyLoading').style.display = 'block';
-            document.getElementById('historyContent').innerHTML = '';
+        // ✅ HISTÓRICO REAL DE MUDANÇAS DE JOGADORES
+        async function loadPlayerHistory() {
+            [cite_start]document.getElementById('historyLoading').style.display = 'block'; [cite: 564]
+            [cite_start]document.getElementById('historyContent').innerHTML = ''; [cite: 564]
             
             try {
-                // Simula histórico de mudanças de nick
-                const history = generateMockHistory();
-                renderHistory(history);
+                const searchTerm = document.getElementById('historySearch').value.trim();
+                [cite_start]let url = `${API_BASE_URL}/api/player_history?limit=50`; [cite: 565]
+                if (searchTerm) {
+                    [cite_start]url += `&search=${encodeURIComponent(searchTerm)}`; [cite: 566]
+                }
+                
+                [cite_start]const response = await fetch(url); [cite: 567]
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        [cite_start]renderPlayerHistory(data.history); [cite: 445]
+                    } else {
+                        [cite_start]document.getElementById('historyContent').innerHTML = '<div class="no-results">❌ Erro ao carregar histórico</div>'; [cite: 446]
+                    }
+                } else {
+                    [cite_start]document.getElementById('historyContent').innerHTML = '<div class="no-results">❌ Erro de conexão com a API</div>'; [cite: 447]
+                }
             } catch (error) {
-                console.error('Erro ao carregar histórico:', error);
+                [cite_start]console.error('Erro ao carregar histórico:', error); [cite: 449]
+                [cite_start]document.getElementById('historyContent').innerHTML = '<div class="no-results">❌ Erro ao carregar histórico</div>'; [cite: 449]
             }
             
-            document.getElementById('historyLoading').style.display = 'none';
+            [cite_start]document.getElementById('historyLoading').style.display = 'none'; [cite: 450]
         }
 
-        async function loadLogs() {
-            document.getElementById('logsLoading').style.display = 'block';
-            document.getElementById('logsContent').innerHTML = '';
+        // ✅ LOGS REAIS DO SISTEMA
+        async function loadSystemLogs() {
+            [cite_start]document.getElementById('logsLoading').style.display = 'block'; [cite: 451]
+            [cite_start]document.getElementById('logsContent').innerHTML = ''; [cite: 451]
             
             try {
-                // Simula logs de atividade
-                const logs = generateMockLogs();
-                renderLogs(logs);
+                const logType = document.getElementById('logFilter').value;
+                [cite_start]let url = `${API_BASE_URL}/api/system_logs?limit=50`; [cite: 452]
+                if (logType && logType !== 'all') {
+                    [cite_start]url += `&type=${logType}`; [cite: 453]
+                }
+                
+                [cite_start]const response = await fetch(url); [cite: 454]
+                if (response.ok) {
+                    const data = await response.json();
+                    [cite_start]if (data.success) { [cite: 455]
+                        [cite_start]renderSystemLogs(data.logs); [cite: 456]
+                    } else {
+                        [cite_start]document.getElementById('logsContent').innerHTML = '<div class="no-results">❌ Erro ao carregar logs</div>'; [cite: 457]
+                    }
+                } else {
+                    [cite_start]document.getElementById('logsContent').innerHTML = '<div class="no-results">❌ Erro de conexão com a API</div>'; [cite: 458]
+                }
             } catch (error) {
-                console.error('Erro ao carregar logs:', error);
+                [cite_start]console.error('Erro ao carregar logs:', error); [cite: 459]
+                [cite_start]document.getElementById('logsContent').innerHTML = '<div class="no-results">❌ Erro ao carregar logs</div>'; [cite: 459]
             }
             
-            document.getElementById('logsLoading').style.display = 'none';
+            [cite_start]document.getElementById('logsLoading').style.display = 'none'; [cite: 460]
         }
 
         // Renderização de Dados
         function updateStats(stats) {
-            document.getElementById('totalPlayers').textContent = stats.total_players || 0;
-            document.getElementById('totalLogins').textContent = stats.total_logins || 0;
+            document.getElementById('totalPlayers').textContent = stats.total_players || [cite_start]0; [cite: 461]
+            document.getElementById('totalLogs').textContent = stats.total_logs || [cite_start]0; [cite: 461]
             document.getElementById('successRate').textContent = stats.success_rate || '0%';
-            document.getElementById('totalBans').textContent = stats.total_bans || 0;
+            document.getElementById('totalBans').textContent = stats.total_bans || [cite_start]0; [cite: 462]
         }
 
         function renderPlayersTable(players) {
             const tbody = document.getElementById('playersBody');
-            tbody.innerHTML = '';
+            [cite_start]tbody.innerHTML = ''; [cite: 463]
 
             players.forEach(player => {
                 const row = document.createElement('tr');
                 const createdDate = new Date(player.created_at).toLocaleDateString('pt-BR');
                 const statusBadge = player.banned ? 
                     '<span class="badge badge-danger">Banido</span>' : 
-                    '<span class="badge badge-success">Ativo</span>';
+                    [cite_start]'<span class="badge badge-success">Ativo</span>'; [cite: 464]
 
                 row.innerHTML = `
                     <td>${player.id}</td>
                     <td>${player.discord_username}</td>
                     <td><strong>${player.haxball_nick}</strong></td>
-                    <td>${createdDate}</td>
+                    [cite_start]<td>${createdDate}</td> [cite: 465]
                     <td>${statusBadge}</td>
                     <td class="action-buttons">
                         ${!player.banned ? 
                             `<button class="btn btn-danger btn-sm" onclick="confirmBan('${player.discord_username}', '${player.haxball_nick}')">🚫 Banir</button>` :
                             `<button class="btn btn-success btn-sm" onclick="confirmUnban('${player.discord_username}', '${player.haxball_nick}')">✅ Desbanir</button>`
-                        }
+                        [cite_start]} [cite: 466]
                         <button class="btn btn-sm" onclick="viewPlayerHistory('${player.haxball_nick}')">📋 Histórico</button>
-                    </td>
+                    [cite_start]</td> [cite: 467]
                 `;
-                tbody.appendChild(row);
+                [cite_start]tbody.appendChild(row); [cite: 468]
             });
+
+            if (players.length === 0) {
+                [cite_start]tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">Nenhum jogador encontrado</td></tr>'; [cite: 469]
+            }
         }
 
         function renderBannedTable(banned) {
             const tbody = document.getElementById('bansBody');
-            tbody.innerHTML = '';
+            [cite_start]tbody.innerHTML = ''; [cite: 470]
 
             banned.forEach(player => {
                 const row = document.createElement('tr');
-                const bannedDate = new Date().toLocaleDateString('pt-BR'); // Simula data do ban
+                const bannedDate = new Date().toLocaleDateString('pt-BR');
 
                 row.innerHTML = `
                     <td>${player.discord_username}</td>
-                    <td><strong>${player.haxball_nick}</strong></td>
+                    [cite_start]<td><strong>${player.haxball_nick}</strong></td> [cite: 471]
                     <td>${bannedDate}</td>
                     <td>Banido por admin</td>
                     <td class="action-buttons">
                         <button class="btn btn-success btn-sm" onclick="confirmUnban('${player.discord_username}', '${player.haxball_nick}')">✅ Desbanir</button>
-                        <button class="btn btn-sm" onclick="viewPlayerHistory('${player.haxball_nick}')">📋 Ver Histórico</button>
+                        [cite_start]<button class="btn btn-sm" onclick="viewPlayerHistory('${player.haxball_nick}')">📋 Ver Histórico</button> [cite: 472]
                     </td>
                 `;
                 tbody.appendChild(row);
             });
-
-            if (banned.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">Nenhum jogador banido encontrado</td></tr>';
+            [cite_start]if (banned.length === 0) { [cite: 473]
+                [cite_start]tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">Nenhum jogador banido encontrado</td></tr>'; [cite: 474]
             }
         }
 
-        function renderHistory(history) {
+        // ✅ RENDERIZAÇÃO REAL DO HISTÓRICO DE JOGADORES
+        function renderPlayerHistory(history) {
             const container = document.getElementById('historyContent');
-            container.innerHTML = '';
+            [cite_start]container.innerHTML = ''; [cite: 475]
+
+            if (!history || history.length === 0) {
+                [cite_start]container.innerHTML = '<div class="no-results">📋 Nenhum histórico encontrado</div>'; [cite: 476]
+                return;
+            }
 
             history.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
-                div.innerHTML = `
-                    <div class="history-date">${item.date}</div>
-                    <div class="history-action">${item.action}</div>
-                    <div style="color: #666; font-size: 0.9rem;">${item.details}</div>
-                `;
-                container.appendChild(div);
-            });
+                
+                const date = new Date(item.created_at).toLocaleString('pt-BR');
+                [cite_start]const actionIcon = getActionIcon(item.action_type); [cite: 477]
+                const actionName = getActionName(item.action_type);
+                
+                let details = item.details;
+                if (item.old_value && item.new_value) {
+                    [cite_start]details += ` (${item.old_value} → ${item.new_value})`; [cite: 478]
+                }
 
-            if (history.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhum histórico encontrado</p>';
-            }
+                div.innerHTML = `
+                    <div class="log-header">
+                        <div>
+                            [cite_start]<span style="color: #667eea; font-weight: bold;">${actionIcon} ${actionName}</span> [cite: 479]
+                            <span style="margin-left: 10px; color: #666;">${item.discord_username || 'Usuário desconhecido'}</span>
+                        </div>
+                        [cite_start]<span class="history-date">${date}</span> [cite: 480]
+                    </div>
+                    <div style="margin-top: 8px;">
+                        [cite_start]<strong>Nick:</strong> ${item.haxball_nick}<br> [cite: 481]
+                        <strong>Detalhes:</strong> ${details}
+                        ${item.performed_by ? `<br><strong>Por:</strong> ${item.performed_by}` : ''}
+                    </div>
+                `;
+                [cite_start]container.appendChild(div); [cite: 482]
+            });
         }
 
-        function renderLogs(logs) {
+        // ✅ RENDERIZAÇÃO REAL DOS LOGS DO SISTEMA
+        function renderSystemLogs(logs) {
             const container = document.getElementById('logsContent');
-            container.innerHTML = '';
+            [cite_start]container.innerHTML = ''; [cite: 483]
+
+            if (!logs || logs.length === 0) {
+                [cite_start]container.innerHTML = '<div class="no-results">📝 Nenhum log encontrado</div>'; [cite: 484]
+                return;
+            }
 
             logs.forEach(log => {
                 const div = document.createElement('div');
-                div.className = 'history-item';
-                const badgeClass = log.type === 'success' ? 'badge-success' : 
-                                 log.type === 'error' ? 'badge-danger' : 'badge-warning';
+                div.className = 'log-item';
                 
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span class="badge ${badgeClass}">${log.type.toUpperCase()}</span>
-                            <strong>${log.action}</strong>
-                        </div>
-                        <div class="history-date">${log.date}</div>
-                    </div>
-                    <div style="margin-top: 5px; color: #666;">${log.details}</div>
-                `;
-                container.appendChild(div);
-            });
+                const date = new Date(log.created_at).toLocaleString('pt-BR');
+                [cite_start]const logTypeClass = log.log_type; [cite: 485]
+                const logIcon = getLogIcon(log.log_type);
 
-            if (logs.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Nenhum log encontrado</p>';
-            }
+                div.innerHTML = `
+                    <div class="log-header">
+                        <div>
+                            [cite_start]<span class="log-type ${logTypeClass}">${logIcon} ${log.log_type.toUpperCase()}</span> [cite: 486]
+                            <span style="margin-left: 10px; font-weight: bold;">${log.action}</span>
+                        </div>
+                        [cite_start]<span class="history-date">${date}</span> [cite: 487]
+                    </div>
+                    <div style="margin-top: 8px; color: #666;">
+                        ${log.player_nick ? `<strong>Jogador:</strong> ${log.player_nick}<br>` : ''}
+                        <strong>Detalhes:</strong> ${log.details}
+                        ${log.performed_by ? [cite_start]`<br><strong>Por:</strong> ${log.performed_by}` : ''} [cite: 488]
+                        ${log.room_name ? `<br><strong>Sala:</strong> ${log.room_name}` : ''}
+                    </div>
+                `;
+                [cite_start]container.appendChild(div); [cite: 489]
+            });
+        }
+
+        // Funções auxiliares para ícones
+        function getActionIcon(actionType) {
+            const icons = {
+                'REGISTRO': '✅',
+                'MUDANCA_SENHA': '🔑',
+                'MUDANCA_NICK': '✏️',
+                [cite_start]'BANIMENTO': '🚫', [cite: 490]
+                'DESBANIMENTO': '✅'
+            };
+            return icons[actionType] || [cite_start]'📝'; [cite: 491]
+        }
+
+        function getActionName(actionType) {
+            const names = {
+                'REGISTRO': 'Registro',
+                'MUDANCA_SENHA': 'Mudança de Senha',
+                'MUDANCA_NICK': 'Mudança de Nick',
+                [cite_start]'BANIMENTO': 'Banimento', [cite: 492]
+                'DESBANIMENTO': 'Desbanimento'
+            };
+            [cite_start]return names[actionType] || actionType; [cite: 493]
+        }
+
+        function getLogIcon(logType) {
+            const icons = {
+                'warning': '⚠️',
+                'error': '❌',
+                'success': '✅',
+                'info': 'ℹ️'
+            [cite_start]}; [cite: 494]
+            return icons[logType] || [cite_start]'📝'; [cite: 495]
         }
 
         // Ações de Banimento
         function showBanModal() {
-            document.getElementById('banModal').style.display = 'block';
+            [cite_start]document.getElementById('banModal').style.display = 'block'; [cite: 496]
         }
 
         function closeBanModal() {
-            document.getElementById('banModal').style.display = 'none';
+            [cite_start]document.getElementById('banModal').style.display = 'none'; [cite: 497]
             document.getElementById('banPlayerName').value = '';
             document.getElementById('banReason').value = '';
         }
 
         async function banPlayer() {
             const playerName = document.getElementById('banPlayerName').value.trim();
-            const reason = document.getElementById('banReason').value.trim() || 'Banido por admin';
+            const reason = document.getElementById('banReason').value.trim() || [cite_start]'Banido por admin'; [cite: 498]
 
             if (!playerName) {
-                showAlert('❌ Digite o nome do jogador!', 'error');
+                [cite_start]showAlert('❌ Digite o nome do jogador!', 'error'); [cite: 499]
                 return;
             }
 
             try {
-                // Simula API de banimento
-                await simulateBanAPI(playerName, reason);
-                
-                // Atualiza dados locais
-                const playerIndex = playersData.findIndex(p => 
-                    p.discord_username.toLowerCase().includes(playerName.toLowerCase()) ||
-                    p.haxball_nick.toLowerCase().includes(playerName.toLowerCase())
-                );
-
-                if (playerIndex !== -1) {
-                    playersData[playerIndex].banned = true;
-                    showAlert(`✅ Jogador ${playerName} foi banido com sucesso!`, 'success');
-                    closeBanModal();
-                    loadPlayers();
-                    loadBannedPlayers();
+                const response = await fetch(`${API_BASE_URL}/api/ban_player`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    [cite_start]body: JSON.stringify({  [cite: 500]
+                        player_name: playerName, 
+                        reason: reason,
+                        banned_by: 'Admin Dashboard'
+                    })
+                [cite_start]}); [cite: 501]
+                [cite_start]if (response.ok) { [cite: 502]
+                    const result = await response.json();
+                    [cite_start]if (result.success) { [cite: 503]
+                        showAlert(`✅ Jogador ${playerName} foi banido com sucesso!`, 'success');
+                        [cite_start]closeBanModal(); [cite: 504]
+                        loadPlayers();
+                        loadBannedPlayers();
+                    } else {
+                        [cite_start]showAlert(`❌ ${result.message}`, 'error'); [cite: 505]
+                    }
                 } else {
-                    showAlert('❌ Jogador não encontrado!', 'error');
+                    [cite_start]showAlert('❌ Erro ao banir jogador', 'error'); [cite: 506]
                 }
             } catch (error) {
-                showAlert('❌ Erro ao banir jogador: ' + error.message, 'error');
+                [cite_start]showAlert('❌ Erro de conexão: ' + error.message, 'error'); [cite: 507]
             }
         }
 
@@ -1028,7 +1144,7 @@
                 '🚫 Confirmar Banimento',
                 `Tem certeza que deseja banir o jogador:<br><strong>Discord:</strong> ${discordName}<br><strong>Haxball:</strong> ${haxballNick}`,
                 () => executeBan(discordName, haxballNick)
-            );
+            [cite_start]); [cite: 508]
         }
 
         function confirmUnban(discordName, haxballNick) {
@@ -1036,44 +1152,58 @@
                 '✅ Confirmar Desbanimento',
                 `Tem certeza que deseja desbanir o jogador:<br><strong>Discord:</strong> ${discordName}<br><strong>Haxball:</strong> ${haxballNick}`,
                 () => executeUnban(discordName, haxballNick)
-            );
+            [cite_start]); [cite: 509]
         }
 
         async function executeBan(discordName, haxballNick) {
             try {
-                await simulateBanAPI(discordName, 'Banido pelo admin dashboard');
-                
-                const playerIndex = playersData.findIndex(p => 
-                    p.discord_username === discordName && p.haxball_nick === haxballNick
-                );
-
-                if (playerIndex !== -1) {
-                    playersData[playerIndex].banned = true;
-                    showAlert(`✅ ${haxballNick} foi banido!`, 'success');
-                    loadPlayers();
-                    loadBannedPlayers();
+                const response = await fetch(`${API_BASE_URL}/api/ban_player`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    [cite_start]body: JSON.stringify({  [cite: 510]
+                        player_name: haxballNick, 
+                        reason: 'Banido pelo admin dashboard',
+                        banned_by: 'Admin Dashboard'
+                    })
+                [cite_start]}); [cite: 511]
+                [cite_start]if (response.ok) { [cite: 512]
+                    const result = await response.json();
+                    [cite_start]if (result.success) { [cite: 513]
+                        showAlert(`✅ ${haxballNick} foi banido!`, 'success');
+                        [cite_start]loadPlayers(); [cite: 514]
+                        loadBannedPlayers();
+                    } else {
+                        [cite_start]showAlert(`❌ ${result.message}`, 'error'); [cite: 515]
+                    }
                 }
             } catch (error) {
-                showAlert('❌ Erro ao banir: ' + error.message, 'error');
+                [cite_start]showAlert('❌ Erro ao banir: ' + error.message, 'error'); [cite: 516]
             }
         }
 
         async function executeUnban(discordName, haxballNick) {
             try {
-                await simulateUnbanAPI(discordName);
-                
-                const playerIndex = playersData.findIndex(p => 
-                    p.discord_username === discordName && p.haxball_nick === haxballNick
-                );
+                const response = await fetch(`${API_BASE_URL}/api/unban_player`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    [cite_start]body: JSON.stringify({  [cite: 517]
+                        player_name: haxballNick,
+                        unbanned_by: 'Admin Dashboard'
+                    })
+                [cite_start]}); [cite: 518]
 
-                if (playerIndex !== -1) {
-                    playersData[playerIndex].banned = false;
-                    showAlert(`✅ ${haxballNick} foi desbanido!`, 'success');
-                    loadPlayers();
-                    loadBannedPlayers();
+                if (response.ok) {
+                    const result = await response.json();
+                    [cite_start]if (result.success) { [cite: 519]
+                        showAlert(`✅ ${haxballNick} foi desbanido!`, 'success');
+                        [cite_start]loadPlayers(); [cite: 520]
+                        loadBannedPlayers();
+                    } else {
+                        [cite_start]showAlert(`❌ ${result.message}`, 'error'); [cite: 521]
+                    }
                 }
             } catch (error) {
-                showAlert('❌ Erro ao desbanir: ' + error.message, 'error');
+                [cite_start]showAlert('❌ Erro ao desbanir: ' + error.message, 'error'); [cite: 522]
             }
         }
 
@@ -1082,77 +1212,76 @@
                 '🗑️ Limpar Todos os Bans',
                 'Tem certeza que deseja remover TODOS os banimentos? Esta ação não pode ser desfeita!',
                 async () => {
-                    try {
-                        // Simula limpeza de bans
-                        playersData.forEach(player => player.banned = false);
-                        showAlert('✅ Todos os bans foram removidos!', 'success');
-                        loadPlayers();
-                        loadBannedPlayers();
-                    } catch (error) {
+                    [cite_start]try { [cite: 523]
+                        // TODO: Implementar endpoint para limpar todos os bans
+                        showAlert('⚠️ Função não implementada ainda', 'warning');
+                    [cite_start]} catch (error) { [cite: 524]
                         showAlert('❌ Erro ao limpar bans: ' + error.message, 'error');
                     }
                 }
-            );
+            [cite_start]); [cite: 525]
         }
 
         // Modal de Confirmação
         function showConfirmModal(title, message, onConfirm) {
             document.getElementById('confirmTitle').innerHTML = title;
-            document.getElementById('confirmMessage').innerHTML = message;
+            [cite_start]document.getElementById('confirmMessage').innerHTML = message; [cite: 526]
             document.getElementById('confirmModal').style.display = 'block';
             
             currentConfirmAction = onConfirm;
             document.getElementById('confirmBtn').onclick = () => {
                 if (currentConfirmAction) {
                     currentConfirmAction();
-                    closeConfirmModal();
+                    [cite_start]closeConfirmModal(); [cite: 527]
                 }
-            };
+            [cite_start]}; [cite: 528]
         }
 
         function closeConfirmModal() {
-            document.getElementById('confirmModal').style.display = 'none';
+            [cite_start]document.getElementById('confirmModal').style.display = 'none'; [cite: 529]
             currentConfirmAction = null;
         }
 
         // Funções de Utilidade
         function showAlert(message, type) {
             const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
+            [cite_start]alertDiv.className = `alert alert-${type}`; [cite: 530]
             alertDiv.innerHTML = message;
             alertDiv.style.position = 'fixed';
             alertDiv.style.top = '20px';
             alertDiv.style.right = '20px';
             alertDiv.style.zIndex = '10000';
-            alertDiv.style.maxWidth = '400px';
+            [cite_start]alertDiv.style.maxWidth = '400px'; [cite: 531]
             
             document.body.appendChild(alertDiv);
             
             setTimeout(() => {
-                document.body.removeChild(alertDiv);
-            }, 4000);
+                if (document.body.contains(alertDiv)) {
+                    document.body.removeChild(alertDiv);
+                }
+            [cite_start]}, 4000); [cite: 532]
         }
 
         function showLoading(elementId) {
-            document.getElementById(elementId).style.display = 'block';
+            [cite_start]document.getElementById(elementId).style.display = 'block'; [cite: 533]
         }
 
         function hideLoading(elementId) {
-            document.getElementById(elementId).style.display = 'none';
+            [cite_start]document.getElementById(elementId).style.display = 'none'; [cite: 534]
         }
 
         function showTable(elementId) {
-            document.getElementById(elementId).style.display = 'table';
+            [cite_start]document.getElementById(elementId).style.display = 'table'; [cite: 535]
         }
 
         function hideTable(elementId) {
-            document.getElementById(elementId).style.display = 'none';
+            [cite_start]document.getElementById(elementId).style.display = 'none'; [cite: 536]
         }
 
         function viewPlayerHistory(haxballNick) {
             showTab('history');
-            document.getElementById('historySearch').value = haxballNick;
-            loadNickHistory();
+            [cite_start]document.getElementById('historySearch').value = haxballNick; [cite: 537]
+            loadPlayerHistory();
         }
 
         function exportData() {
@@ -1160,224 +1289,74 @@
                 players: playersData,
                 exportDate: new Date().toISOString(),
                 totalPlayers: playersData.length,
-                bannedPlayers: playersData.filter(p => p.banned).length
+                [cite_start]bannedPlayers: playersData.filter(p => p.banned).length [cite: 538]
             };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            [cite_start]const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); [cite: 539]
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            [cite_start]a.href = url; [cite: 540]
             a.download = `jojo-torneios-backup-${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            showAlert('✅ Dados exportados com sucesso!', 'success');
-        }
-
-        // Simulação de APIs (substitua por chamadas reais)
-        async function simulateBanAPI(playerName, reason) {
-            // Simula delay da API
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/ban_player`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ player_name: playerName, reason: reason })
-                });
-                
-                if (!response.ok) throw new Error('API não disponível');
-                return await response.json();
-            } catch (error) {
-                // Se API não funcionar, simula sucesso para demo
-                console.log(`Simulando ban de ${playerName}: ${reason}`);
-                return { success: true };
-            }
-        }
-
-        async function simulateUnbanAPI(playerName) {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/unban_player`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ player_name: playerName })
-                });
-                
-                if (!response.ok) throw new Error('API não disponível');
-                return await response.json();
-            } catch (error) {
-                console.log(`Simulando unban de ${playerName}`);
-                return { success: true };
-            }
-        }
-
-        // Dados simulados para demonstração
-        function generateMockPlayers() {
-            return [
-                {
-                    id: 1,
-                    discord_username: "JogoHax123",
-                    haxball_nick: "ProPlayer",
-                    created_at: new Date(2024, 0, 15).toISOString(),
-                    updated_at: new Date(2024, 0, 15).toISOString(),
-                    banned: false
-                },
-                {
-                    id: 2,
-                    discord_username: "HaxMaster",
-                    haxball_nick: "Striker",
-                    created_at: new Date(2024, 0, 20).toISOString(),
-                    updated_at: new Date(2024, 1, 10).toISOString(),
-                    banned: true
-                },
-                {
-                    id: 3,
-                    discord_username: "GamerBR",
-                    haxball_nick: "Defensor",
-                    created_at: new Date(2024, 1, 5).toISOString(),
-                    updated_at: new Date(2024, 1, 5).toISOString(),
-                    banned: false
-                },
-                {
-                    id: 4,
-                    discord_username: "TopPlayer",
-                    haxball_nick: "Goleiro",
-                    created_at: new Date(2024, 1, 12).toISOString(),
-                    updated_at: new Date(2024, 1, 12).toISOString(),
-                    banned: false
-                },
-                {
-                    id: 5,
-                    discord_username: "TrollMaster",
-                    haxball_nick: "Bagunca",
-                    created_at: new Date(2024, 1, 18).toISOString(),
-                    updated_at: new Date(2024, 1, 18).toISOString(),
-                    banned: true
-                }
-            ];
-        }
-
-        function generateMockHistory() {
-            return [
-                {
-                    date: '15/02/2024 14:30',
-                    action: 'Mudança de Nick',
-                    details: 'HaxMaster alterou nick de "OldNick" para "Striker"'
-                },
-                {
-                    date: '10/02/2024 16:45',
-                    action: 'Mudança de Senha',
-                    details: 'GamerBR alterou sua senha'
-                },
-                {
-                    date: '08/02/2024 11:20',
-                    action: 'Mudança de Nick',
-                    details: 'ProPlayer alterou nick de "Newbie" para "ProPlayer"'
-                },
-                {
-                    date: '05/02/2024 09:15',
-                    action: 'Registro',
-                    details: 'TopPlayer se registrou no sistema'
-                },
-                {
-                    date: '03/02/2024 20:30',
-                    action: 'Mudança de Nick',
-                    details: 'TrollMaster alterou nick de "GoodPlayer" para "Bagunca"'
-                }
-            ];
-        }
-
-        function generateMockLogs() {
-            return [
-                {
-                    date: '15/02/2024 18:25',
-                    type: 'error',
-                    action: 'Tentativa de Login Falhada',
-                    details: 'Usuário "Striker" tentou fazer login com senha incorreta (3 tentativas)'
-                },
-                {
-                    date: '15/02/2024 17:45',
-                    type: 'success',
-                    action: 'Login Realizado',
-                    details: 'ProPlayer fez login com sucesso na sala'
-                },
-                {
-                    date: '15/02/2024 16:30',
-                    type: 'warning',
-                    action: 'Banimento Aplicado',
-                    details: 'Admin baniu "TrollMaster" por comportamento inadequado'
-                },
-                {
-                    date: '15/02/2024 15:10',
-                    type: 'success',
-                    action: 'Registro Concluído',
-                    details: 'Novo jogador "NovoPlayer" se registrou no sistema'
-                },
-                {
-                    date: '15/02/2024 14:20',
-                    type: 'success',
-                    action: 'Mudança de Nick',
-                    details: 'GamerBR alterou nick de "OldGamer" para "Defensor"'
-                }
-            ];
+            [cite_start]showAlert('✅ Dados exportados com sucesso!', 'success'); [cite: 541]
         }
 
         // Filtros de Busca
-        document.getElementById('playersSearch').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const filteredPlayers = playersData.filter(player => 
-                player.discord_username.toLowerCase().includes(searchTerm) ||
-                player.haxball_nick.toLowerCase().includes(searchTerm)
-            );
-            renderPlayersTable(filteredPlayers);
-        });
-
-        document.getElementById('bansSearch').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const filteredBanned = bannedPlayers.filter(player => 
-                player.discord_username.toLowerCase().includes(searchTerm) ||
-                player.haxball_nick.toLowerCase().includes(searchTerm)
-            );
-            renderBannedTable(filteredBanned);
-        });
-
-        document.getElementById('historySearch').addEventListener('input', function() {
-            // ✅ RECARREGA O HISTÓRICO COM O FILTRO DE BUSCA
-            clearTimeout(this.searchTimeout);
-            this.searchTimeout = setTimeout(() => {
-                loadNickHistory();
-            }, 500); // Delay de 500ms para evitar muitas requisições
-        });
-
-        // Event Listeners para Login
-        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
-
-        // Fecha modais ao clicar fora
-        window.onclick = function(event) {
-            const banModal = document.getElementById('banModal');
-            const confirmModal = document.getElementById('confirmModal');
-            
-            if (event.target === banModal) {
-                closeBanModal();
-            }
-            if (event.target === confirmModal) {
-                closeConfirmModal();
-            }
-        };
-
-        // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            // Verifica se já está logado (opcional - pode implementar localStorage)
-            // loadData(); // Descomente se quiser carregar dados automaticamente
+            // Players Search
+            document.getElementById('playersSearch').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredPlayers = playersData.filter(player => 
+                    [cite_start]player.discord_username.toLowerCase().includes(searchTerm) || [cite: 542]
+                    player.haxball_nick.toLowerCase().includes(searchTerm)
+                );
+                renderPlayersTable(filteredPlayers);
+            });
+
+            // Bans Search
+            [cite_start]document.getElementById('bansSearch').addEventListener('input', function() { [cite: 543]
+                const searchTerm = this.value.toLowerCase();
+                const filteredBanned = bannedPlayers.filter(player => 
+                    player.discord_username.toLowerCase().includes(searchTerm) ||
+                    player.haxball_nick.toLowerCase().includes(searchTerm)
+                );
+                [cite_start]renderBannedTable(filteredBanned); [cite: 544]
+            });
+
+            // History Search
+            document.getElementById('historySearch').addEventListener('input', function() {
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(() => {
+                    loadPlayerHistory();
+                }, 500);
+            [cite_start]}); [cite: 545]
+
+            // Log Filter
+            document.getElementById('logFilter').addEventListener('change', function() {
+                loadSystemLogs();
+            });
+            // Login on Enter
+            [cite_start]document.getElementById('adminPassword').addEventListener('keypress', function(e) { [cite: 546]
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            // Close modals on outside click
+            [cite_start]window.onclick = function(event) { [cite: 547]
+                const banModal = document.getElementById('banModal');
+                [cite_start]const confirmModal = document.getElementById('confirmModal'); [cite: 548]
+                
+                if (event.target === banModal) {
+                    [cite_start]closeBanModal(); [cite: 549]
+                }
+                if (event.target === confirmModal) {
+                    [cite_start]closeConfirmModal(); [cite: 550]
+                }
+            };
         });
-    </script>
+    [cite_start]</script> [cite: 551]
 </body>
 </html>

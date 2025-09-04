@@ -470,8 +470,8 @@
                         <div class="stat-label">Jogadores Registrados</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="totalLogs">-</div>
-                        <div class="stat-label">Total de Logs</div>
+                        <div class="stat-number" id="totalLogins">-</div>
+                        <div class="stat-label">Total de Logins</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="successRate">-</div>
@@ -838,7 +838,7 @@
         // Renderização de Dados
         function updateStats(stats) {
             document.getElementById('totalPlayers').textContent = stats.total_players || 0;
-            document.getElementById('totalLogs').textContent = stats.total_logs || 0;
+            document.getElementById('totalLogins').textContent = stats.total_logins || 0;
             document.getElementById('successRate').textContent = stats.success_rate || '0%';
             document.getElementById('totalBans').textContent = stats.total_bans || 0;
         }

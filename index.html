@@ -464,6 +464,7 @@
             </div>
 
             <div id="overview" class="tab-content active">
+                <!-- ✅ REMOVIDO success-rate, mantém apenas os 3 cards importantes -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="totalPlayers">-</div>
@@ -472,10 +473,6 @@
                     <div class="stat-card">
                         <div class="stat-number" id="totalLogins">-</div>
                         <div class="stat-label">Total de Logins</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="successRate">-</div>
-                        <div class="stat-label">Taxa de Sucesso</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="totalBans">-</div>
@@ -579,8 +576,9 @@
                     <div style="margin-bottom: 20px;">
                         <select id="logFilter" class="form-input" style="width: auto; display: inline-block; margin-right: 10px;">
                             <option value="all">Todos os Logs</option>
-                            <option value="warning">Banimentos Manuais</option>
+                            <option value="warning">Banimentos</option>
                             <option value="success">Registros</option>
+                            <option value="error">Erros</option>
                         </select>
                     </div>
                     
@@ -722,7 +720,7 @@
             }
         }
 
-        // Carregamento de Dados com APIs REAIS
+        // ✅ CARREGAMENTO DE DADOS CORRIGIDO - REMOVIDO SUCCESS_RATE
         async function loadData() {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/stats`);
@@ -835,11 +833,10 @@
             document.getElementById('logsLoading').style.display = 'none';
         }
 
-        // Renderização de Dados
+        // ✅ RENDERIZAÇÃO DE DADOS CORRIGIDA
         function updateStats(stats) {
             document.getElementById('totalPlayers').textContent = stats.total_players || 0;
             document.getElementById('totalLogins').textContent = stats.total_logins || 0;
-            document.getElementById('successRate').textContent = stats.success_rate || '0%';
             document.getElementById('totalBans').textContent = stats.total_bans || 0;
         }
 
@@ -943,7 +940,7 @@
             });
         }
 
-        // ✅ RENDERIZAÇÃO REAL DOS LOGS DO SISTEMA
+        // ✅ RENDERIZAÇÃO REAL DOS LOGS DO SISTEMA (INCLUI BANS DA SALA)
         function renderSystemLogs(logs) {
             const container = document.getElementById('logsContent');
             container.innerHTML = '';
@@ -1047,7 +1044,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success) {
-                        showAlert(`✅ Jogador ${playerName} foi banido com sucesso!`, 'success');
+                        showAlert(`✅ ${result.message}`, 'success');
                         closeBanModal();
                         loadPlayers();
                         loadBannedPlayers();
@@ -1092,7 +1089,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success) {
-                        showAlert(`✅ ${haxballNick} foi banido!`, 'success');
+                        showAlert(`✅ ${result.message}`, 'success');
                         loadPlayers();
                         loadBannedPlayers();
                     } else {
@@ -1118,7 +1115,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success) {
-                        showAlert(`✅ ${haxballNick} foi desbanido!`, 'success');
+                        showAlert(`✅ ${result.message}`, 'success');
                         loadPlayers();
                         loadBannedPlayers();
                     } else {

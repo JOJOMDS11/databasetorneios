@@ -213,6 +213,7 @@
                 <button class="nav-tab active" onclick="showTab('overview')">📊 Visão Geral</button>
                 <button class="nav-tab" onclick="showTab('players')">👥 Jogadores</button>
                 <button class="nav-tab" onclick="showTab('vips')">💎 VIPs</button>
+                <button class="nav-tab" onclick="showTab('coins')">🟣 Purple Coins</button>
                 <button class="nav-tab" onclick="showTab('bans')">🚫 Banimentos</button>
                 <button class="nav-tab" onclick="showTab('history')">📋 Histórico</button>
                 <button class="nav-tab" onclick="showTab('logs')">📝 Logs</button>
@@ -302,6 +303,36 @@
                         </thead>
                         <tbody id="vipsTableBody"></tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- PURPLE COINS -->
+            <div id="coins" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🟣 Gerenciar Purple Coins</div>
+                        <button onclick="showAddCoinsModal()" class="btn btn-success">➕ Adicionar Moedas</button>
+                    </div>
+                    
+                    <input type="text" class="search-bar" placeholder="🔍 Pesquisar jogador..." id="coinsSearch" oninput="filterCoins()">
+                    
+                    <table id="coinsTable">
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Purple Coins 🟣</th>
+                                <th>Última Atualização</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coinsTableBody"></tbody>
+                    </table>
+                    
+                    <div class="pagination">
+                        <button onclick="changePage('coins', -1)" id="coinsPrevBtn">← Anterior</button>
+                        <span class="page-info" id="coinsPageInfo">Página 1</span>
+                        <button onclick="changePage('coins', 1)" id="coinsNextBtn">Próxima →</button>
+                    </div>
                 </div>
             </div>
 
@@ -397,14 +428,58 @@
         </div>
     </div>
 
+    <!-- MODAL ADICIONAR PURPLE COINS -->
+    <div id="coinsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCoinsModal()">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">🟣 Adicionar Purple Coins</h2>
+            <div class="form-group">
+                <label class="form-label">Nick do Jogador</label>
+                <input type="text" id="coinsNick" class="form-input" placeholder="Digite o nick">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantidade de Moedas</label>
+                <input type="number" id="coinsAmount" class="form-input" placeholder="100" value="100">
+            </div>
+            <button onclick="addCoins()" class="btn btn-success" style="width: 100%;">Adicionar Moedas</button>
+        </div>
+    </div>
+
+    <!-- MODAL DOAR VIP COM MOEDAS -->
+    <div id="giftVipModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGiftVipModal()">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">🎁 Doar VIP com Purple Coins</h2>
+            <div class="form-group">
+                <label class="form-label">Nick do Jogador (Origem das Moedas)</label>
+                <input type="text" id="giftFromNick" class="form-input" placeholder="Quem vai doar">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nick do Jogador (Quem vai receber VIP)</label>
+                <input type="text" id="giftToNick" class="form-input" placeholder="Quem vai ganhar VIP">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nível VIP</label>
+                <select id="giftVipLevel" class="form-input">
+                    <option value="1">VIP 1 - jojo lover 💜 (500 moedas - 7 dias)</option>
+                    <option value="2">VIP 2 - Vip 💎 (1500 moedas - 15 dias)</option>
+                    <option value="3">VIP 3 - Premium ✨ (3000 moedas - 30 dias)</option>
+                    <option value="4">VIP 4 - Purple 🟣 (6000 moedas - 60 dias)</option>
+                </select>
+            </div>
+            <button onclick="giftVip()" class="btn btn-success" style="width: 100%;">🎁 Confirmar Doação</button>
+        </div>
+    </div>
+
     <script>
         const API_BASE_URL = 'https://jojotorneios-qhjm.onrender.com';
         let playersData = [];
         let bannedData = [];
         let vipsData = [];
+        let coinsData = [];
         
         // Paginação
-        let currentPage = { players: 1, bans: 1 };
+        let currentPage = { players: 1, bans: 1, coins: 1 };
         let itemsPerPage = 20;
 
         // LOGIN
@@ -458,6 +533,7 @@
             
             if (tabName === 'players') loadPlayers();
             if (tabName === 'vips') loadVips();
+            if (tabName === 'coins') loadCoins();
             if (tabName === 'bans') loadBannedPlayers();
             if (tabName === 'history') loadPlayerHistory();
             if (tabName === 'logs') loadSystemLogs();
@@ -586,8 +662,48 @@
         }
 
         async function loadVips() {
-            // TODO: Implementar endpoint de VIPs
-            document.getElementById('vipsTableBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">Sistema de VIPs em desenvolvimento</td></tr>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vips`);
+                const data = await response.json();
+                console.log('VIPs recebidos:', data);
+                vipsData = data.vips || [];
+                renderVips();
+            } catch (error) {
+                console.error('Erro ao carregar VIPs:', error);
+                document.getElementById('vipsTableBody').innerHTML = '<tr><td colspan="6" class="no-data">Nenhum VIP ativo no momento</td></tr>';
+            }
+        }
+        
+        function renderVips() {
+            const tbody = document.getElementById('vipsTableBody');
+            
+            if (vipsData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Nenhum VIP ativo no momento</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = vipsData.map(vip => {
+                const now = new Date();
+                const expires = new Date(vip.expires_at);
+                const timeLeft = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
+                const vipClass = `vip-${vip.vip_level}`;
+                const vipName = vip.vip_level === 1 ? 'jojo lover 💜' : 
+                               vip.vip_level === 2 ? 'Vip 💎' : 
+                               vip.vip_level === 3 ? 'Premium ✨' : 'Purple 🟣';
+                
+                return `
+                    <tr>
+                        <td>${vip.player_nick}</td>
+                        <td><span class="vip-badge ${vipClass}">${vipName}</span></td>
+                        <td>${new Date(vip.created_at).toLocaleDateString('pt-BR')}</td>
+                        <td>${expires.toLocaleDateString('pt-BR')}</td>
+                        <td>${timeLeft > 0 ? `${timeLeft} dias` : '<span class="badge badge-danger">EXPIRADO</span>'}</td>
+                        <td>
+                            <button onclick="removeVip('${vip.player_nick}')" class="btn btn-sm btn-danger">❌ Remover</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         async function loadPlayerHistory() {
@@ -599,15 +715,19 @@
                 
                 if (data.success && data.history && data.history.length > 0) {
                     content.innerHTML = data.history.map(h => {
-                        const timestamp = h.timestamp ? new Date(h.timestamp).toLocaleString('pt-BR') : 'Data inválida';
+                        const timestamp = h.created_at ? new Date(h.created_at).toLocaleString('pt-BR') : 'Data inválida';
+                        const actionType = h.action_type || 'AÇÃO';
+                        const details = h.details || '';
+                        const discord = h.discord_username || '';
+                        
                         return `
                         <div class="log-item">
                             <div class="log-header">
-                                <strong style="color: #667eea;">${h.player_name || 'Jogador desconhecido'}</strong>
+                                <strong style="color: #667eea;">${actionType}</strong>
                                 <span style="color: #999; font-size: 0.9rem;">${timestamp}</span>
                             </div>
                             <div style="color: #555;">
-                                <strong>${h.action_type || 'AÇÃO'}:</strong> ${h.action_details || 'Sem detalhes'}
+                                ${details}${discord ? ` - Discord: ${discord}` : ''}
                             </div>
                         </div>
                     `}).join('');
@@ -629,9 +749,10 @@
                 
                 if (data.success && data.logs && data.logs.length > 0) {
                     content.innerHTML = data.logs.map(log => {
-                        const timestamp = log.timestamp ? new Date(log.timestamp).toLocaleString('pt-BR') : 'Data inválida';
+                        const timestamp = log.created_at ? new Date(log.created_at).toLocaleString('pt-BR') : 'Data inválida';
                         const logType = log.log_type || 'INFO';
                         const logColor = logType === 'error' ? '#ef5350' : logType === 'success' ? '#43e97b' : '#667eea';
+                        const message = log.message || log.log_message || 'Sem mensagem';
                         
                         return `
                         <div class="log-item">
@@ -639,7 +760,7 @@
                                 <strong style="color: ${logColor};">${logType.toUpperCase()}</strong>
                                 <span style="color: #999; font-size: 0.9rem;">${timestamp}</span>
                             </div>
-                            <div style="color: #555;">${log.log_message || 'Sem mensagem'}</div>
+                            <div style="color: #555;">${message}</div>
                         </div>
                     `}).join('');
                 } else {
@@ -658,6 +779,7 @@
             
             if (type === 'players') renderPlayers();
             if (type === 'bans') renderBannedPlayers();
+            if (type === 'coins') renderCoins();
         }
 
         function updatePagination(type, totalItems) {
@@ -741,8 +863,61 @@
         }
 
         async function addVip() {
-            // TODO: Implementar endpoint de adicionar VIP
-            alert('Sistema de VIP em desenvolvimento');
+            const nick = document.getElementById('vipNick').value.trim();
+            const level = parseInt(document.getElementById('vipLevel').value);
+            const duration = parseInt(document.getElementById('vipDuration').value);
+            
+            if (!nick) {
+                alert('❌ Digite o nick do jogador!');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/add_vip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        player_nick: nick, 
+                        vip_level: level, 
+                        duration_days: duration,
+                        added_by: 'Admin Dashboard'
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ VIP adicionado com sucesso!');
+                    closeVipModal();
+                    loadVips();
+                    document.getElementById('vipNick').value = '';
+                    document.getElementById('vipDuration').value = '30';
+                } else {
+                    alert('❌ ' + (data.message || 'Erro ao adicionar VIP'));
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar VIP:', error);
+                alert('❌ Erro ao conectar com o servidor!');
+            }
+        }
+        
+        async function removeVip(nick) {
+            if (confirm(`Deseja remover o VIP de ${nick}?`)) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/remove_vip`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ player_nick: nick, removed_by: 'Admin Dashboard' })
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert('✅ VIP removido com sucesso!');
+                        loadVips();
+                    }
+                } catch (error) {
+                    alert('❌ Erro ao remover VIP!');
+                }
+            }
         }
 
         function exportData() {
@@ -757,6 +932,155 @@
             a.href = url;
             a.download = `jojo_data_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
+        }
+
+        // PURPLE COINS
+        async function loadCoins() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/players`);
+                const data = await response.json();
+                coinsData = (data.players || []).map(p => ({
+                    nick: p.haxball_nick,
+                    coins: p.purple_coins || 0,
+                    updated_at: p.coins_updated_at || p.created_at
+                })).filter(p => p.coins > 0);
+                renderCoins();
+            } catch (error) {
+                console.error('Erro ao carregar moedas:', error);
+                coinsData = [];
+                renderCoins();
+            }
+        }
+
+        function renderCoins() {
+            const tbody = document.getElementById('coinsTableBody');
+            const searchTerm = document.getElementById('coinsSearch')?.value.toLowerCase() || '';
+            
+            let filtered = coinsData.filter(p => p.nick.toLowerCase().includes(searchTerm));
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">Nenhum jogador com Purple Coins</td></tr>';
+                updatePagination('coins', 0);
+                return;
+            }
+            
+            const start = (currentPage.coins - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginated = filtered.slice(start, end);
+            
+            tbody.innerHTML = paginated.map(p => `
+                <tr>
+                    <td><strong>${p.nick}</strong></td>
+                    <td><span style="font-size: 1.3rem; color: #667eea; font-weight: bold;">${p.coins} 🟣</span></td>
+                    <td>${new Date(p.updated_at).toLocaleString('pt-BR')}</td>
+                    <td>
+                        <button onclick="showGiftVipModal('${p.nick}')" class="btn btn-sm btn-success">🎁 Doar VIP</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            updatePagination('coins', filtered.length);
+        }
+
+        function filterCoins() {
+            currentPage.coins = 1;
+            renderCoins();
+        }
+
+        function showAddCoinsModal() {
+            document.getElementById('coinsModal').style.display = 'block';
+        }
+
+        function closeCoinsModal() {
+            document.getElementById('coinsModal').style.display = 'none';
+        }
+
+        async function addCoins() {
+            const nick = document.getElementById('coinsNick').value.trim();
+            const amount = parseInt(document.getElementById('coinsAmount').value);
+            
+            if (!nick || !amount) {
+                alert('❌ Preencha todos os campos!');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/add_coins`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ player_nick: nick, amount, added_by: 'Admin Dashboard' })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ ${amount} Purple Coins adicionados para ${nick}!`);
+                    closeCoinsModal();
+                    loadCoins();
+                    document.getElementById('coinsNick').value = '';
+                    document.getElementById('coinsAmount').value = '100';
+                } else {
+                    alert('❌ ' + (data.message || 'Erro ao adicionar moedas'));
+                }
+            } catch (error) {
+                alert('❌ Erro ao conectar com o servidor!');
+            }
+        }
+
+        function showGiftVipModal(fromNick = '') {
+            document.getElementById('giftVipModal').style.display = 'block';
+            if (fromNick) document.getElementById('giftFromNick').value = fromNick;
+        }
+
+        function closeGiftVipModal() {
+            document.getElementById('giftVipModal').style.display = 'none';
+        }
+
+        async function giftVip() {
+            const fromNick = document.getElementById('giftFromNick').value.trim();
+            const toNick = document.getElementById('giftToNick').value.trim();
+            const level = parseInt(document.getElementById('giftVipLevel').value);
+            
+            const costs = { 1: 500, 2: 1500, 3: 3000, 4: 6000 };
+            const days = { 1: 7, 2: 15, 3: 30, 4: 60 };
+            const cost = costs[level];
+            const duration = days[level];
+            
+            if (!fromNick || !toNick) {
+                alert('❌ Preencha todos os campos!');
+                return;
+            }
+            
+            if (!confirm(`Confirmar doação de VIP nível ${level} para ${toNick}?\n\nCusto: ${cost} Purple Coins\nDuração: ${duration} dias\n\nAs moedas serão deduzidas de ${fromNick}.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/gift_vip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        from_nick: fromNick, 
+                        to_nick: toNick, 
+                        vip_level: level,
+                        cost: cost,
+                        duration_days: duration
+                    })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ VIP doado com sucesso!\n\n${fromNick} doou VIP nível ${level} para ${toNick}\nMoedas gastas: ${cost} 🟣`);
+                    closeGiftVipModal();
+                    loadCoins();
+                    loadVips();
+                    document.getElementById('giftFromNick').value = '';
+                    document.getElementById('giftToNick').value = '';
+                } else {
+                    alert('❌ ' + (data.message || 'Erro ao doar VIP'));
+                }
+            } catch (error) {
+                alert('❌ Erro ao conectar com o servidor!');
+            }
         }
 
         // Login com Enter

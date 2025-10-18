@@ -168,6 +168,28 @@
         .ban-room { background: #ffa726; color: white; }
         .ban-admin { background: #ef5350; color: white; }
         .ban-auto { background: #ab47bc; color: white; }
+        .log-item {
+            background: rgba(255,255,255,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .log-item:hover {
+            background: rgba(255,255,255,0.7);
+        }
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -421,7 +443,18 @@
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            
+            // Encontrar e ativar o botão correto
+            const buttons = document.querySelectorAll('.nav-tab');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(tabName === 'overview' ? 'Visão Geral' : 
+                                            tabName === 'players' ? 'Jogadores' : 
+                                            tabName === 'vips' ? 'VIPs' : 
+                                            tabName === 'bans' ? 'Banimentos' : 
+                                            tabName === 'history' ? 'Histórico' : 'Logs')) {
+                    btn.classList.add('active');
+                }
+            });
             
             if (tabName === 'players') loadPlayers();
             if (tabName === 'vips') loadVips();
@@ -435,11 +468,15 @@
             try {
                 const statsRes = await fetch(`${API_BASE_URL}/api/stats`);
                 const stats = await statsRes.json();
+                console.log('Stats recebidas:', stats); // Debug
                 document.getElementById('totalPlayers').textContent = stats.total_players || 0;
                 document.getElementById('totalLogins').textContent = stats.total_logins || 0;
                 document.getElementById('totalBans').textContent = stats.total_bans || 0;
             } catch (error) {
                 console.error('Erro ao carregar stats:', error);
+                document.getElementById('totalPlayers').textContent = '0';
+                document.getElementById('totalLogins').textContent = '0';
+                document.getElementById('totalBans').textContent = '0';
             }
         }
 
@@ -447,10 +484,14 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/api/players`);
                 const data = await response.json();
+                console.log('Jogadores recebidos:', data); // Debug
                 playersData = data.players || [];
+                console.log('Total de jogadores:', playersData.length); // Debug
                 renderPlayers();
             } catch (error) {
                 console.error('Erro ao carregar jogadores:', error);
+                playersData = [];
+                renderPlayers();
             }
         }
 
@@ -463,6 +504,14 @@
                 (p.haxball_nick?.toLowerCase() || '').includes(searchTerm)
             );
             
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Nenhum jogador encontrado</td></tr>';
+                document.getElementById('playersPageInfo').textContent = 'Página 0 de 0';
+                document.getElementById('playersPrevBtn').disabled = true;
+                document.getElementById('playersNextBtn').disabled = true;
+                return;
+            }
+            
             const start = (currentPage.players - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const paginated = filtered.slice(start, end);
@@ -472,7 +521,7 @@
                     <td>${start + i + 1}</td>
                     <td>${player.discord_username || '-'}</td>
                     <td>${player.haxball_nick || '-'}</td>
-                    <td>${new Date(player.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>${player.created_at ? new Date(player.created_at).toLocaleDateString('pt-BR') : '-'}</td>
                     <td><span class="badge ${player.banned ? 'badge-danger' : 'badge-success'}">${player.banned ? 'BANIDO' : 'ATIVO'}</span></td>
                     <td>
                         <button onclick="viewPlayerDetails('${player.haxball_nick}')" class="btn btn-sm">📊 Ver Stats</button>
@@ -488,10 +537,14 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/api/players`);
                 const data = await response.json();
+                console.log('Dados recebidos para bans:', data); // Debug
                 bannedData = (data.players || []).filter(p => p.banned);
+                console.log('Jogadores banidos:', bannedData.length); // Debug
                 renderBannedPlayers();
             } catch (error) {
                 console.error('Erro ao carregar banidos:', error);
+                bannedData = [];
+                renderBannedPlayers();
             }
         }
 
@@ -502,6 +555,14 @@
             let filtered = bannedData.filter(p => 
                 (p.haxball_nick?.toLowerCase() || '').includes(searchTerm)
             );
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">Nenhum jogador banido encontrado</td></tr>';
+                document.getElementById('bansPageInfo').textContent = 'Página 0 de 0';
+                document.getElementById('bansPrevBtn').disabled = true;
+                document.getElementById('bansNextBtn').disabled = true;
+                return;
+            }
             
             const start = (currentPage.bans - 1) * itemsPerPage;
             const end = start + itemsPerPage;
@@ -533,23 +594,29 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/api/player_history?limit=50`);
                 const data = await response.json();
+                console.log('Histórico recebido:', data); // Debug
                 const content = document.getElementById('historyContent');
                 
-                if (data.history && data.history.length > 0) {
-                    content.innerHTML = data.history.map(h => `
+                if (data.success && data.history && data.history.length > 0) {
+                    content.innerHTML = data.history.map(h => {
+                        const timestamp = h.timestamp ? new Date(h.timestamp).toLocaleString('pt-BR') : 'Data inválida';
+                        return `
                         <div class="log-item">
                             <div class="log-header">
-                                <strong>${h.player_name || '-'}</strong>
-                                <span style="color: #999; font-size: 0.9rem;">${new Date(h.timestamp).toLocaleString('pt-BR')}</span>
+                                <strong style="color: #667eea;">${h.player_name || 'Jogador desconhecido'}</strong>
+                                <span style="color: #999; font-size: 0.9rem;">${timestamp}</span>
                             </div>
-                            <div>${h.action_type}: ${h.action_details || '-'}</div>
+                            <div style="color: #555;">
+                                <strong>${h.action_type || 'AÇÃO'}:</strong> ${h.action_details || 'Sem detalhes'}
+                            </div>
                         </div>
-                    `).join('');
+                    `}).join('');
                 } else {
-                    content.innerHTML = '<p style="text-align: center; color: #999;">Nenhum histórico encontrado</p>';
+                    content.innerHTML = '<div class="no-data">📋 Nenhum histórico de ações encontrado</div>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar histórico:', error);
+                document.getElementById('historyContent').innerHTML = '<div class="no-data">❌ Erro ao carregar histórico</div>';
             }
         }
 
@@ -557,23 +624,30 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/api/system_logs?limit=50`);
                 const data = await response.json();
+                console.log('Logs recebidos:', data); // Debug
                 const content = document.getElementById('logsContent');
                 
-                if (data.logs && data.logs.length > 0) {
-                    content.innerHTML = data.logs.map(log => `
+                if (data.success && data.logs && data.logs.length > 0) {
+                    content.innerHTML = data.logs.map(log => {
+                        const timestamp = log.timestamp ? new Date(log.timestamp).toLocaleString('pt-BR') : 'Data inválida';
+                        const logType = log.log_type || 'INFO';
+                        const logColor = logType === 'error' ? '#ef5350' : logType === 'success' ? '#43e97b' : '#667eea';
+                        
+                        return `
                         <div class="log-item">
                             <div class="log-header">
-                                <strong style="color: #667eea;">${log.log_type || 'INFO'}</strong>
-                                <span style="color: #999; font-size: 0.9rem;">${new Date(log.timestamp).toLocaleString('pt-BR')}</span>
+                                <strong style="color: ${logColor};">${logType.toUpperCase()}</strong>
+                                <span style="color: #999; font-size: 0.9rem;">${timestamp}</span>
                             </div>
-                            <div>${log.log_message || '-'}</div>
+                            <div style="color: #555;">${log.log_message || 'Sem mensagem'}</div>
                         </div>
-                    `).join('');
+                    `}).join('');
                 } else {
-                    content.innerHTML = '<p style="text-align: center; color: #999;">Nenhum log encontrado</p>';
+                    content.innerHTML = '<div class="no-data">📝 Nenhum log do sistema encontrado</div>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar logs:', error);
+                document.getElementById('logsContent').innerHTML = '<div class="no-data">❌ Erro ao carregar logs</div>';
             }
         }
 
@@ -587,10 +661,14 @@
         }
 
         function updatePagination(type, totalItems) {
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            document.getElementById(`${type}PageInfo`).textContent = `Página ${currentPage[type]} de ${totalPages}`;
-            document.getElementById(`${type}PrevBtn`).disabled = currentPage[type] === 1;
-            document.getElementById(`${type}NextBtn`).disabled = currentPage[type] >= totalPages;
+            const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+            const pageInfo = document.getElementById(`${type}PageInfo`);
+            const prevBtn = document.getElementById(`${type}PrevBtn`);
+            const nextBtn = document.getElementById(`${type}NextBtn`);
+            
+            if (pageInfo) pageInfo.textContent = `Página ${currentPage[type]} de ${totalPages}`;
+            if (prevBtn) prevBtn.disabled = currentPage[type] === 1;
+            if (nextBtn) nextBtn.disabled = currentPage[type] >= totalPages || totalItems === 0;
         }
 
         function filterPlayers() {

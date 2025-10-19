@@ -214,6 +214,7 @@
                 <button class="nav-tab" onclick="showTab('players')">👥 Jogadores</button>
                 <button class="nav-tab" onclick="showTab('vips')">💎 VIPs</button>
                 <button class="nav-tab" onclick="showTab('coins')">🟣 Purple Coins</button>
+                <button class="nav-tab" onclick="showTab('stats')">📊 Stats GOATS</button>
                 <button class="nav-tab" onclick="showTab('bans')">🚫 Banimentos</button>
                 <button class="nav-tab" onclick="showTab('history')">📋 Histórico</button>
                 <button class="nav-tab" onclick="showTab('logs')">📝 Logs</button>
@@ -390,6 +391,62 @@
                     <div id="logsContent"></div>
                 </div>
             </div>
+
+            <!-- STATS GOATS -->
+            <div id="stats" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📊 Stats da Sala GOATS</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="loadMatchHistory()" class="btn">🔄 Atualizar</button>
+                            <button onclick="exportStats()" class="btn btn-success">📥 Baixar Stats (CSV)</button>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div style="font-size: 3rem;">🎮</div>
+                            <div class="stat-number" id="totalMatches">0</div>
+                            <div class="stat-label">Partidas Registradas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 3rem;">⚽</div>
+                            <div class="stat-number" id="totalGoalsStats">0</div>
+                            <div class="stat-label">Gols Totais</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 3rem;">🅰️</div>
+                            <div class="stat-number" id="totalAssistsStats">0</div>
+                            <div class="stat-label">Assistências Totais</div>
+                        </div>
+                        <div class="stat-card">
+                            <div style="font-size: 3rem;">🧤</div>
+                            <div class="stat-number" id="totalCSStats">0</div>
+                            <div class="stat-label">Clean Sheets</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 30px 0 15px 0; color: #667eea;">📋 Últimas 100 Partidas</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Nick</th>
+                                <th>Discord</th>
+                                <th>⚽ Gols</th>
+                                <th>🅰️ Assists</th>
+                                <th>🧤 CS</th>
+                                <th>⚠️ GC</th>
+                                <th>Resultado</th>
+                                <th>Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchHistoryTableBody">
+                            <tr><td colspan="9" style="text-align:center;">Carregando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -534,6 +591,7 @@
             if (tabName === 'players') loadPlayers();
             if (tabName === 'vips') loadVips();
             if (tabName === 'coins') loadCoins();
+            if (tabName === 'stats') loadMatchHistory();
             if (tabName === 'bans') loadBannedPlayers();
             if (tabName === 'history') loadPlayerHistory();
             if (tabName === 'logs') loadSystemLogs();
@@ -1080,6 +1138,68 @@
                 }
             } catch (error) {
                 alert('❌ Erro ao conectar com o servidor!');
+            }
+        }
+
+        // STATS GOATS
+        async function loadMatchHistory() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/get_match_history?limit=100`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const tbody = document.getElementById('matchHistoryTableBody');
+                    tbody.innerHTML = '';
+                    
+                    let totalGoals = 0;
+                    let totalAssists = 0;
+                    let totalCS = 0;
+                    
+                    data.matches.forEach(match => {
+                        totalGoals += match.goals;
+                        totalAssists += match.assists;
+                        totalCS += match.cs;
+                        
+                        const row = tbody.insertRow();
+                        const date = new Date(match.date);
+                        const dateStr = date.toLocaleString('pt-BR');
+                        
+                        row.innerHTML = `
+                            <td>${dateStr}</td>
+                            <td><strong>${match.nick}</strong></td>
+                            <td>${match.discord || '-'}</td>
+                            <td style="text-align:center;">${match.goals}</td>
+                            <td style="text-align:center;">${match.assists}</td>
+                            <td style="text-align:center;">${match.cs}</td>
+                            <td style="text-align:center;">${match.owngoals}</td>
+                            <td style="text-align:center;">${match.won ? '✅ Vitória' : '❌ Derrota'}</td>
+                            <td style="text-align:center;"><strong>${match.pontos}</strong></td>
+                        `;
+                    });
+                    
+                    document.getElementById('totalMatches').textContent = data.total;
+                    document.getElementById('totalGoalsStats').textContent = totalGoals;
+                    document.getElementById('totalAssistsStats').textContent = totalAssists;
+                    document.getElementById('totalCSStats').textContent = totalCS;
+                } else {
+                    document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="9" class="no-data">Nenhuma partida encontrada</td></tr>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar histórico:', error);
+                document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="9" class="no-data">❌ Erro ao carregar histórico</td></tr>';
+            }
+        }
+
+        async function exportStats() {
+            try {
+                alert('⏳ Gerando arquivo CSV...');
+                window.location.href = `${API_BASE_URL}/api/export_stats`;
+                setTimeout(() => {
+                    alert('✅ Stats exportados com sucesso!');
+                }, 1000);
+            } catch (error) {
+                console.error('Erro ao exportar stats:', error);
+                alert('❌ Erro ao exportar stats');
             }
         }
 

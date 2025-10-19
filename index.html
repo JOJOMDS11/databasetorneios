@@ -396,8 +396,13 @@
             <div id="stats" class="tab-content">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">📊 Stats da Sala GOATS</h2>
-                        <div style="display: flex; gap: 10px;">
+                        <h2 class="card-title">📊 Stats das Salas</h2>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <select id="roomFilter" onchange="loadMatchHistory()" class="form-control" style="width: 150px;">
+                                <option value="">Todas Salas</option>
+                                <option value="GOATS">🐐 GOATS</option>
+                                <option value="NOOBS">🆕 NOOBS</option>
+                            </select>
                             <button onclick="loadMatchHistory()" class="btn">🔄 Atualizar</button>
                             <button onclick="exportStats()" class="btn btn-success">📥 Baixar Stats (CSV)</button>
                         </div>
@@ -1141,10 +1146,16 @@
             }
         }
 
-        // STATS GOATS
+        // STATS GOATS/NOOBS
         async function loadMatchHistory() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/get_match_history?limit=100`);
+                // Pegar filtro de sala selecionado
+                const roomFilter = document.getElementById('roomFilter')?.value || '';
+                const url = roomFilter 
+                    ? `${API_BASE_URL}/api/get_match_history?limit=100&room=${encodeURIComponent(roomFilter)}`
+                    : `${API_BASE_URL}/api/get_match_history?limit=100`;
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1164,10 +1175,14 @@
                         const date = new Date(match.date);
                         const dateStr = date.toLocaleString('pt-BR');
                         
+                        // Emoji da sala
+                        const roomEmoji = match.room === 'GOATS' ? '🐐' : match.room === 'NOOBS' ? '🆕' : '🎮';
+                        
                         row.innerHTML = `
                             <td>${dateStr}</td>
                             <td><strong>${match.nick}</strong></td>
                             <td>${match.discord || '-'}</td>
+                            <td style="text-align:center;">${roomEmoji} ${match.room}</td>
                             <td style="text-align:center;">${match.goals}</td>
                             <td style="text-align:center;">${match.assists}</td>
                             <td style="text-align:center;">${match.cs}</td>
@@ -1182,11 +1197,11 @@
                     document.getElementById('totalAssistsStats').textContent = totalAssists;
                     document.getElementById('totalCSStats').textContent = totalCS;
                 } else {
-                    document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="9" class="no-data">Nenhuma partida encontrada</td></tr>';
+                    document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="10" class="no-data">Nenhuma partida encontrada</td></tr>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar histórico:', error);
-                document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="9" class="no-data">❌ Erro ao carregar histórico</td></tr>';
+                document.getElementById('matchHistoryTableBody').innerHTML = '<tr><td colspan="10" class="no-data">❌ Erro ao carregar histórico</td></tr>';
             }
         }
 

@@ -939,6 +939,11 @@
             }
         }
 
+        // Variáveis de paginação de suspeitas
+        let currentSuspiciousPage = 1;
+        const suspiciousPerPage = 10;
+        let allSuspicious = [];
+
         async function loadSuspiciousPlayers() {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/detect_suspicious`);
@@ -947,88 +952,152 @@
                 const content = document.getElementById('suspiciousContent');
 
                 if (data.success && data.suspicious && data.suspicious.length > 0) {
-                    const sameAuth = data.suspicious.filter(i => i.type === 'AUTH');
-                    const sameIpv4 = data.suspicious.filter(i => i.type === 'IPv4');
-                    const sameConn = data.suspicious.filter(i => i.type === 'CONN');
-
-                    let html = '';
-
-                    const renderSuspiciousGroup = (items, type, emoji, label) => {
-                        if (!items || items.length === 0) return '';
-
-                        const typeColor = {
-                            auth: '#ff6b6b',
-                            ipv4: '#ffa500',
-                            conn: '#f59e0b'
-                        };
-
-                        return `
-                            <div style="margin-bottom: 25px;">
-                                <h4 style="color: ${typeColor[type]}; margin-bottom: 15px;">${emoji} ${label}</h4>
-                                ${items.map(item => {
-                                    const severityColor = item.severity === 'high' ? '#dc2626' : 
-                                                         item.severity === 'medium' ? '#f59e0b' : '#fbbf24';
-                                    const severityLabel = item.severity === 'high' ? 'ALTA' : 
-                                                         item.severity === 'medium' ? 'MÉDIA' : 'BAIXA';
-                                    const lastSeen = item.last_seen ? new Date(item.last_seen).toLocaleString('pt-BR') : '-';
-
-                                    return `
-                                        <div class="log-item" style="border-left: 4px solid ${severityColor};">
-                                            <div class="log-header">
-                                                <div>
-                                                    <strong style="color: ${severityColor};">⚠️ GRAVIDADE ${severityLabel}</strong>
-                                                    <span style="color: #666; margin-left: 10px;">${type.toUpperCase()}: <code>${item.identifier}</code></span>
-                                                </div>
-                                                <span style="color: #999; font-size: 0.9rem;">${lastSeen}</span>
-                                            </div>
-                                            <div style="margin-top: 10px; color: #555;">
-                                                <strong>${item.account_count} contas diferentes</strong> usando o mesmo ${label.toLowerCase()}:
-                                                <div style="margin-top: 10px;">
-                                                    ${(item.discord_usernames || []).map((discordUsername, idx) => {
-                                                        const nick = (item.nicks || [])[idx] || 'Desconhecido';
-                                                        const discordId = (item.discord_ids || [])[idx] || '';
-                                                        return `
-                                                            <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid ${severityColor};">
-                                                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                                    <div>
-                                                                        <strong>Nick Haxball:</strong> ${nick}
-                                                                        <span style="color: #667eea; margin-left: 10px; font-weight: bold;">@${discordUsername || 'Desconhecido'}</span>
-                                                                        <span style="color: #999; margin-left: 5px; font-size: 0.8rem;">(ID: ${discordId})</span>
-                                                                    </div>
-                                                                    <button onclick="viewNickHistory('${nick}')" class="btn" style="font-size: 0.8rem; padding: 4px 8px;">
-                                                                        📋 Histórico de Nicks
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        `;
-                                                    }).join('')}
-                                                </div>
-                                                ${type === 'ipv4' ? `
-                                                    <div style="margin-top: 10px;">
-                                                        <button onclick="viewIpLocation('${item.identifier_full || item.identifier}')" class="btn" style="font-size: 0.85rem; padding: 5px 10px;">
-                                                            🌍 Ver Localização
-                                                        </button>
-                                                    </div>
-                                                ` : ''}
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        `;
-                    };
-
-                    html += renderSuspiciousGroup(sameAuth, 'auth', '🔐', 'Mesmo AUTH (Autenticação)');
-                    html += renderSuspiciousGroup(sameIpv4, 'ipv4', '🌐', 'Mesmo IPv4');
-                    html += renderSuspiciousGroup(sameConn, 'conn', '🔗', 'Mesma CONN (Conexão)');
-
-                    content.innerHTML = html;
+                    allSuspicious = data.suspicious;
+                    currentSuspiciousPage = 1;
+                    renderSuspiciousPage();
                 } else {
                     content.innerHTML = '<div class="no-data">✅ Nenhuma atividade suspeita detectada no momento</div>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar suspeitas:', error);
                 document.getElementById('suspiciousContent').innerHTML = '<div class="no-data">❌ Erro ao carregar detecção de suspeitas</div>';
+            }
+        }
+
+        function renderSuspiciousPage() {
+            const content = document.getElementById('suspiciousContent');
+            const startIdx = (currentSuspiciousPage - 1) * suspiciousPerPage;
+            const endIdx = startIdx + suspiciousPerPage;
+            const pageSuspicious = allSuspicious.slice(startIdx, endIdx);
+            const totalPages = Math.ceil(allSuspicious.length / suspiciousPerPage);
+
+            const sameAuth = pageSuspicious.filter(i => i.type === 'AUTH');
+            const sameIpv4 = pageSuspicious.filter(i => i.type === 'IPv4');
+            const sameConn = pageSuspicious.filter(i => i.type === 'CONN');
+
+            let html = '';
+
+            const renderSuspiciousGroup = (items, type, emoji, label) => {
+                if (!items || items.length === 0) return '';
+
+                const typeColor = {
+                    auth: '#ff6b6b',
+                    ipv4: '#ffa500',
+                    conn: '#f59e0b'
+                };
+
+                return `
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: ${typeColor[type]}; margin-bottom: 15px;">${emoji} ${label}</h4>
+                        ${items.map(item => {
+                            const severityColor = item.severity === 'high' ? '#dc2626' : 
+                                                 item.severity === 'medium' ? '#f59e0b' : '#fbbf24';
+                            const severityLabel = item.severity === 'high' ? 'ALTA' : 
+                                                 item.severity === 'medium' ? 'MÉDIA' : 'BAIXA';
+                            const lastSeen = item.last_seen ? new Date(item.last_seen).toLocaleString('pt-BR') : '-';
+
+                            return `
+                                <div class="log-item" style="border-left: 4px solid ${severityColor}; position: relative;">
+                                    <div class="log-header">
+                                        <div>
+                                            <strong style="color: ${severityColor};">⚠️ GRAVIDADE ${severityLabel}</strong>
+                                            <span style="color: #666; margin-left: 10px;">${type.toUpperCase()}: <code>${item.identifier}</code></span>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                            <span style="color: #999; font-size: 0.9rem;">${lastSeen}</span>
+                                            <button onclick="ignoreSuspicious('${item.type}', '${item.identifier_full || item.identifier}')" 
+                                                    class="btn" style="background: #10b981; font-size: 0.8rem; padding: 4px 8px;">
+                                                ✓ Ignorar (Mesma Rede)
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 10px; color: #555;">
+                                        <strong>${item.account_count} contas diferentes</strong> usando o mesmo ${label.toLowerCase()}:
+                                        <div style="margin-top: 10px;">
+                                            ${(item.discord_usernames || []).map((discordUsername, idx) => {
+                                                const nick = (item.nicks || [])[idx] || 'Desconhecido';
+                                                const discordId = (item.discord_ids || [])[idx] || '';
+                                                return `
+                                                    <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid ${severityColor};">
+                                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                            <div>
+                                                                <strong>Nick Haxball:</strong> ${nick}
+                                                                <span style="color: #667eea; margin-left: 10px; font-weight: bold;">@${discordUsername || 'Desconhecido'}</span>
+                                                                <span style="color: #999; margin-left: 5px; font-size: 0.8rem;">(ID: ${discordId})</span>
+                                                            </div>
+                                                            <button onclick="viewNickHistory('${nick}')" class="btn" style="font-size: 0.8rem; padding: 4px 8px;">
+                                                                📋 Histórico de Nicks
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                        ${type === 'ipv4' ? `
+                                            <div style="margin-top: 10px;">
+                                                <button onclick="viewIpLocation('${item.identifier_full || item.identifier}')" class="btn" style="font-size: 0.85rem; padding: 5px 10px;">
+                                                    🌍 Ver Localização
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            };
+
+            html += renderSuspiciousGroup(sameAuth, 'auth', '🔐', 'Mesmo AUTH (Autenticação)');
+            html += renderSuspiciousGroup(sameIpv4, 'ipv4', '🌐', 'Mesmo IPv4');
+            html += renderSuspiciousGroup(sameConn, 'conn', '🔗', 'Mesma CONN (Conexão)');
+
+            // Paginação
+            if (totalPages > 1) {
+                html += `
+                    <div class="pagination" style="margin-top: 20px;">
+                        <button onclick="changeSuspiciousPage(-1)" ${currentSuspiciousPage === 1 ? 'disabled' : ''}>← Anterior</button>
+                        <span class="page-info">Página ${currentSuspiciousPage} de ${totalPages}</span>
+                        <button onclick="changeSuspiciousPage(1)" ${currentSuspiciousPage >= totalPages ? 'disabled' : ''}>Próxima →</button>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function changeSuspiciousPage(direction) {
+            currentSuspiciousPage += direction;
+            renderSuspiciousPage();
+        }
+
+        async function ignoreSuspicious(type, identifier) {
+            if (!confirm(`Confirma que deseja IGNORAR esta suspeita?\n\nTipo: ${type}\nIdentificador: ${identifier.substring(0, 50)}...\n\nEsta suspeita não aparecerá mais nas verificações futuras.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ignore_suspicious`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: type,
+                        identifier: identifier,
+                        reason: 'Mesma rede/família'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('✅ Suspeita ignorada com sucesso!');
+                    loadSuspiciousPlayers(); // Recarrega a lista
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao ignorar suspeita:', error);
+                alert('❌ Erro ao conectar com o servidor');
             }
         }
 
@@ -1782,6 +1851,10 @@
         }
 
         async function clearOldSuspiciousData() {
+            if (!confirm('⚠️ Deseja limpar a visualização ou remover suspeitas ignoradas?\n\nEscolha "OK" para apenas limpar a tela\nou "Cancelar" e use o botão "Gerenciar Ignorados" para ver/remover ignorados.')) {
+                return;
+            }
+            
             // Apenas limpa a visualização, NÃO deleta nada do banco
             document.getElementById('suspiciousContent').innerHTML = `
                 <div style="text-align: center; padding: 40px; color: #666;">

@@ -410,7 +410,7 @@
                         <div class="card-title">⚠️ Detecção de Contas Suspeitas</div>
                         <div style="display: flex; gap: 10px;">
                             <button onclick="loadSuspiciousPlayers()" class="btn">🔄 Verificar</button>
-                            <button onclick="clearOldSuspiciousData()" class="btn" style="background: #dc2626;">🗑️ Limpar Dados Antigos</button>
+                            <button onclick="clearOldSuspiciousData()" class="btn" style="background: #f59e0b;">🧹 Limpar Visualização</button>
                         </div>
                     </div>
                     <div id="suspiciousContent">
@@ -984,14 +984,16 @@
                                             <div style="margin-top: 10px; color: #555;">
                                                 <strong>${item.account_count} contas diferentes</strong> usando o mesmo ${label.toLowerCase()}:
                                                 <div style="margin-top: 10px;">
-                                                    ${(item.discord_ids || []).map((discordId, idx) => {
+                                                    ${(item.discord_usernames || []).map((discordUsername, idx) => {
                                                         const nick = (item.nicks || [])[idx] || 'Desconhecido';
+                                                        const discordId = (item.discord_ids || [])[idx] || '';
                                                         return `
                                                             <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid ${severityColor};">
                                                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                                                     <div>
-                                                                        <strong>Nick Atual:</strong> ${nick}
-                                                                        <span style="color: #999; margin-left: 10px; font-size: 0.85rem;">Discord ID: ${discordId}</span>
+                                                                        <strong>Nick Haxball:</strong> ${nick}
+                                                                        <span style="color: #667eea; margin-left: 10px; font-weight: bold;">@${discordUsername || 'Desconhecido'}</span>
+                                                                        <span style="color: #999; margin-left: 5px; font-size: 0.8rem;">(ID: ${discordId})</span>
                                                                     </div>
                                                                     <button onclick="viewNickHistory('${nick}')" class="btn" style="font-size: 0.8rem; padding: 4px 8px;">
                                                                         📋 Histórico de Nicks
@@ -1715,6 +1717,9 @@
                         const entries = results[nick];
                         const firstEntry = entries[0];
                         const totalLogins = entries.length;
+                        const discordData = data.discord_info[nick] || {};
+                        const discordUsername = discordData.discord_username || 'Desconhecido';
+                        const discordId = discordData.discord_id || 'N/A';
 
                         html += `
                             <div class="card" style="margin-bottom: 15px; border: 1px solid #e9ecef;">
@@ -1722,12 +1727,19 @@
                                     <div>
                                         <h4 style="margin: 0; color: #667eea;">👤 ${nick}</h4>
                                         <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">
-                                            ${totalLogins} login(s) registrado(s) • Último: ${new Date(firstEntry.login_time).toLocaleString('pt-BR')}
+                                            <strong style="color: #667eea;">@${discordUsername}</strong> 
+                                            <span style="color: #999; font-size: 0.8rem;">(ID: ${discordId})</span>
+                                            • ${totalLogins} login(s) • Último: ${new Date(firstEntry.login_time).toLocaleString('pt-BR')}
                                         </p>
                                     </div>
-                                    <button class="btn btn-sm" onclick="viewLoginHistory('${nick}')">
-                                        👁️ Ver Histórico Completo
-                                    </button>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn btn-sm" onclick="viewNickHistory('${nick}')">
+                                            📋 Histórico de Nicks
+                                        </button>
+                                        <button class="btn btn-sm" onclick="viewLoginHistory('${nick}')">
+                                            👁️ Ver Histórico Completo
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <div style="background: rgba(248, 249, 250, 0.8); padding: 15px; border-radius: 8px;">
@@ -1770,26 +1782,16 @@
         }
 
         async function clearOldSuspiciousData() {
-            if (!confirm('⚠️ Tem certeza que deseja limpar dados antigos de login?\n\nIsso irá deletar logins com mais de 30 dias do banco de dados para evitar sobrecarga.')) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/clear_old_logins`, {
-                    method: 'POST'
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    alert(`✅ ${data.deleted_count} registros antigos foram removidos!`);
-                    loadSuspiciousPlayers(); // Recarrega as suspeitas
-                } else {
-                    alert('❌ Erro: ' + data.message);
-                }
-            } catch (error) {
-                console.error('Erro ao limpar dados:', error);
-                alert('❌ Erro ao conectar com o servidor');
-            }
+            // Apenas limpa a visualização, NÃO deleta nada do banco
+            document.getElementById('suspiciousContent').innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+                    <p>Visualização limpa!</p>
+                    <p style="font-size: 0.9rem; color: #999;">
+                        Clique em "Verificar" para carregar novamente
+                    </p>
+                </div>
+            `;
         }
 
         // Login com Enter
@@ -1804,3 +1806,4 @@
     </script>
 </body>
 </html>
+VVVVVVVVVVV

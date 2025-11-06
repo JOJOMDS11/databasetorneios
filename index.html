@@ -1013,6 +1013,14 @@
                                                  item.severity === 'medium' ? 'MÉDIA' : 'BAIXA';
                             const lastSeen = item.last_seen ? new Date(item.last_seen).toLocaleString('pt-BR') : '-';
 
+                            // Cores dos botões baseado no tipo
+                            const buttonColor = item.type === 'ipv4' ? '#10b981' : // Verde - mesma rede
+                                               item.type === 'auth' ? '#dc2626' : // Vermelho - mesmo PC
+                                               '#f59e0b'; // Amarelo - CONN
+                            const buttonText = item.type === 'ipv4' ? '✓ Ignorar (Mesma Rede)' :
+                                              item.type === 'auth' ? '✓ Ignorar (Mesmo PC)' :
+                                              '✓ Ignorar';
+
                             return `
                                 <div class="log-item" style="border-left: 4px solid ${severityColor}; position: relative;">
                                     <div class="log-header">
@@ -1023,8 +1031,8 @@
                                         <div style="display: flex; gap: 8px; align-items: center;">
                                             <span style="color: #999; font-size: 0.9rem;">${lastSeen}</span>
                                             <button onclick="ignoreSuspicious('${item.type}', '${item.identifier_full || item.identifier}')" 
-                                                    class="btn" style="background: #10b981; font-size: 0.8rem; padding: 4px 8px;">
-                                                ✓ Ignorar (Mesma Rede)
+                                                    class="btn" style="background: ${buttonColor}; color: white; font-size: 0.8rem; padding: 4px 8px;">
+                                                ${buttonText}
                                             </button>
                                         </div>
                                     </div>

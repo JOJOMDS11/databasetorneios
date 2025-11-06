@@ -727,6 +727,7 @@
                     <td>
                         <button onclick="viewPlayerDetails('${player.haxball_nick}')" class="btn btn-sm">📊 Ver Stats</button>
                         <button onclick="viewLoginHistory('${player.haxball_nick}')" class="btn btn-sm">🔍 Ver Login</button>
+                        <button onclick="viewNickHistory('${player.haxball_nick}')" class="btn btn-sm">📝 Histórico Nomes</button>
                         <button onclick="showBanPlayer('${player.haxball_nick}')" class="btn btn-sm btn-danger">🚫 Banir</button>
                     </td>
                 </tr>
@@ -1391,6 +1392,87 @@
             } catch (error) {
                 console.error('Erro ao buscar histórico de login:', error);
                 alert('❌ Erro ao buscar histórico');
+            }
+        }
+
+        // NOVO: Visualizar histórico de nomes/nicks do jogador
+        async function viewNickHistory(nick) {
+            try {
+                const resp = await fetch(`${API_BASE_URL}/api/get_nick_history?haxball_nick=${encodeURIComponent(nick)}`);
+                const data = await resp.json();
+                
+                if (!data.success) {
+                    alert('Erro ao carregar histórico de nomes: ' + (data.message || 'Erro desconhecido'));
+                    return;
+                }
+
+                const modal = document.getElementById('playerModal');
+                const title = document.getElementById('playerModalTitle');
+                const content = document.getElementById('playerModalContent');
+
+                title.textContent = `📝 Histórico de Nomes`;
+                
+                if (!data.nicks || data.nicks.length === 0) {
+                    content.innerHTML = '<div class="no-data">Nenhum histórico encontrado</div>';
+                } else {
+                    let html = `
+                        <div style="background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="margin: 0; color: #667eea;">
+                                <strong>Discord ID:</strong> <code>${data.discord_id}</code><br>
+                                <strong>Total de nomes usados:</strong> ${data.total_nicks}
+                            </p>
+                        </div>
+                    `;
+
+                    if (data.nicks.length > 1) {
+                        html += `
+                            <div class="card" style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; margin-bottom: 15px;">
+                                <p style="margin: 0; color: #856404;">
+                                    ⚠️ Este jogador já usou <strong>${data.nicks.length} nomes diferentes</strong>
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    data.nicks.forEach((nickData, index) => {
+                        const isCurrentNick = nickData.nick === nick;
+                        const lastUsed = nickData.last_login || nickData.last_update || nickData.registered_at;
+                        
+                        html += `
+                            <div class="log-item" style="${isCurrentNick ? 'border-left: 4px solid #28a745; background: rgba(40, 167, 69, 0.05);' : ''}">
+                                <div class="log-header">
+                                    <strong style="color: ${isCurrentNick ? '#28a745' : '#667eea'}; font-size: 1.1rem;">
+                                        ${isCurrentNick ? '✅ ' : ''}${nickData.nick}${isCurrentNick ? ' (ATUAL)' : ''}
+                                    </strong>
+                                    <span style="color: #999; font-size: 0.85rem;">
+                                        ${lastUsed ? new Date(lastUsed).toLocaleString('pt-BR') : 'Data desconhecida'}
+                                    </span>
+                                </div>
+                                <div style="margin-top: 8px; font-size: 0.9rem; color: #666;">
+                                    ${nickData.total_logins > 0 ? `
+                                        <div>📊 <strong>${nickData.total_logins}</strong> login(s) registrado(s)</div>
+                                    ` : ''}
+                                    ${nickData.first_login ? `
+                                        <div>🕐 Primeira vez: ${new Date(nickData.first_login).toLocaleString('pt-BR')}</div>
+                                    ` : ''}
+                                    ${nickData.last_login ? `
+                                        <div>🕐 Última vez: ${new Date(nickData.last_login).toLocaleString('pt-BR')}</div>
+                                    ` : ''}
+                                    ${nickData.registered_at ? `
+                                        <div>📝 Registrado em: ${new Date(nickData.registered_at).toLocaleString('pt-BR')}</div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    content.innerHTML = html;
+                }
+
+                modal.style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao buscar histórico de nomes:', error);
+                alert('❌ Erro ao buscar histórico de nomes');
             }
         }
 

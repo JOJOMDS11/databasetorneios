@@ -641,6 +641,46 @@
         </div>
     </div>
 
+    <!-- MODAL CONFIRMAR IGNORAR SUSPEITA -->
+    <div id="confirmIgnoreModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close" onclick="closeConfirmIgnoreModal()">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">✓ Ignorar Suspeita</h2>
+            
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 id="ignoreTypeLabel" style="margin: 0 0 10px 0; color: #495057;"></h3>
+                <code id="ignoreIdentifierValue" style="background: white; padding: 5px 10px; border-radius: 4px; display: inline-block;"></code>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #495057; margin-bottom: 10px;">👥 Jogadores Envolvidos:</h4>
+                <div id="ignorePlayersList" style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                    <!-- Lista será preenchida dinamicamente -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">📝 Motivo</label>
+                <select id="ignoreReason" class="form-input">
+                    <option value="Mesma família/residência">Mesma família/residência</option>
+                    <option value="Mesma rede (escola/trabalho/lan house)">Mesma rede (escola/trabalho/lan house)</option>
+                    <option value="Irmãos/parentes">Irmãos/parentes</option>
+                    <option value="Compartilhamento de PC">Compartilhamento de PC</option>
+                    <option value="Outro motivo legítimo">Outro motivo legítimo</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="confirmIgnoreSuspicious()" class="btn btn-success" style="flex: 1;">
+                    ✓ Confirmar e Ignorar
+                </button>
+                <button onclick="closeConfirmIgnoreModal()" class="btn" style="flex: 1; background: #6c757d;">
+                    ✗ Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE_URL = 'https://jojotorneios-qhjm.onrender.com';
         let playersData = [];
@@ -652,6 +692,13 @@
         // Paginação
         let currentPage = { players: 1, bans: 1, coins: 1 };
         let itemsPerPage = 20;
+
+        // Variáveis para modal de ignorar suspeita
+        let pendingIgnore = {
+            type: '',
+            identifier: '',
+            players: []
+        };
 
         // LOGIN
         async function login() {
@@ -1006,7 +1053,7 @@
                 return `
                     <div style="margin-bottom: 25px;">
                         <h4 style="color: ${typeColor[type]}; margin-bottom: 15px;">${emoji} ${label}</h4>
-                        ${items.map(item => {
+                        ${items.map((item, itemIndex) => {
                             const severityColor = item.severity === 'high' ? '#dc2626' : 
                                                  item.severity === 'medium' ? '#f59e0b' : '#fbbf24';
                             const severityLabel = item.severity === 'high' ? 'ALTA' : 
@@ -1021,6 +1068,13 @@
                                               type === 'auth' ? '✓ Ignorar (Mesmo PC)' :
                                               '✓ Ignorar';
 
+                            // Preparar dados dos jogadores para passar ao modal
+                            const playersData = (item.discord_usernames || []).map((discordUsername, idx) => ({
+                                nick: (item.nicks || [])[idx] || 'Desconhecido',
+                                discordUsername: discordUsername || 'Desconhecido',
+                                discordId: (item.discord_ids || [])[idx] || ''
+                            }));
+
                             return `
                                 <div class="log-item" style="border-left: 4px solid ${severityColor}; position: relative;">
                                     <div class="log-header">
@@ -1030,7 +1084,11 @@
                                         </div>
                                         <div style="display: flex; gap: 8px; align-items: center;">
                                             <span style="color: #999; font-size: 0.9rem;">${lastSeen}</span>
-                                            <button onclick="ignoreSuspicious('${item.type}', '${item.identifier_full || item.identifier}')" 
+                                            <button onclick='openIgnoreModal(${JSON.stringify({
+                                                type: item.type,
+                                                identifier: item.identifier_full || item.identifier,
+                                                players: playersData
+                                            })})' 
                                                     class="btn" style="background: ${buttonColor}; color: white; font-size: 0.8rem; padding: 4px 8px;">
                                                 ${buttonText}
                                             </button>
@@ -1096,19 +1154,56 @@
             renderSuspiciousPage();
         }
 
-        async function ignoreSuspicious(type, identifier) {
-            if (!confirm(`Confirma que deseja IGNORAR esta suspeita?\n\nTipo: ${type}\nIdentificador: ${identifier.substring(0, 50)}...\n\nEsta suspeita não aparecerá mais nas verificações futuras.`)) {
-                return;
-            }
+        // Abre modal de confirmação para ignorar
+        function openIgnoreModal(data) {
+            pendingIgnore = data;
+
+            const typeLabels = {
+                'AUTH': '🔐 AUTH (Autenticação) - Mesmo PC',
+                'IPv4': '🌐 IPv4 - Mesma Rede',
+                'CONN': '🔗 CONN (Conexão)'
+            };
+
+            document.getElementById('ignoreTypeLabel').textContent = typeLabels[data.type] || data.type;
+            document.getElementById('ignoreIdentifierValue').textContent = data.identifier;
+
+            // Preencher lista de jogadores
+            const playersList = document.getElementById('ignorePlayersList');
+            playersList.innerHTML = data.players.map(player => `
+                <div style="background: white; padding: 12px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid #667eea;">
+                    <div style="font-weight: bold; color: #495057; margin-bottom: 5px;">
+                        Nick Haxball: <span style="color: #000;">${player.nick}</span>
+                    </div>
+                    <div style="color: #667eea; font-weight: bold;">
+                        Discord: @${player.discordUsername}
+                    </div>
+                    <div style="color: #999; font-size: 0.85rem; margin-top: 3px;">
+                        ID: ${player.discordId}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('confirmIgnoreModal').style.display = 'block';
+        }
+
+        // Fecha modal de confirmação
+        function closeConfirmIgnoreModal() {
+            document.getElementById('confirmIgnoreModal').style.display = 'none';
+            pendingIgnore = { type: '', identifier: '', players: [] };
+        }
+
+        // Confirma e executa o ignore
+        async function confirmIgnoreSuspicious() {
+            const reason = document.getElementById('ignoreReason').value;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/api/ignore_suspicious`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type: type,
-                        identifier: identifier,
-                        reason: 'Mesma rede/família'
+                        type: pendingIgnore.type,
+                        identifier: pendingIgnore.identifier,
+                        reason: reason
                     })
                 });
 
@@ -1116,7 +1211,8 @@
 
                 if (data.success) {
                     alert('✅ Suspeita ignorada com sucesso!');
-                    loadSuspiciousPlayers(); // Recarrega a lista
+                    closeConfirmIgnoreModal();
+                    detectSuspicious(); // Recarrega a lista
                 } else {
                     alert('❌ Erro: ' + data.message);
                 }
@@ -1124,6 +1220,11 @@
                 console.error('Erro ao ignorar suspeita:', error);
                 alert('❌ Erro ao conectar com o servidor');
             }
+        }
+
+        // FUNÇÃO ANTIGA MANTIDA PARA COMPATIBILIDADE
+        async function ignoreSuspicious(type, identifier) {
+            console.warn('Função ignoreSuspicious antiga - deveria usar openIgnoreModal');
         }
 
         // PAGINAÇÃO

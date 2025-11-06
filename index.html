@@ -458,42 +458,59 @@
     </div>
 
     <!-- RASTREAMENTO -->
-    <div id="tracking" class="tab-content" style="display:none;">
+    <div id="tracking" class="tab-content">
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">🔍 Rastreamento de Logins</h2>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <input id="trackSearchInput" class="form-input" style="width:320px;" placeholder="Digite auth / ipv4 / conn e pressione Buscar">
-                    <select id="trackSearchType" class="form-input" style="width:140px;">
-                        <option value="auth">Auth</option>
-                        <option value="ipv4">IPv4</option>
-                        <option value="conn">Conn</option>
-                    </select>
-                    <button class="btn" onclick="searchByIdentifier()">🔎 Buscar</button>
-                    <button class="btn" onclick="loadRecentLogins()">🔄 Carregar últimos</button>
-                </div>
+                <button onclick="loadRecentLogins()" class="btn">🔄 Atualizar</button>
             </div>
 
-            <h3 style="margin: 20px 0 10px 0; color: #667eea;">📋 Últimos Logins</h3>
+            <!-- SEÇÃO DE BUSCA -->
+            <div class="card" style="background: rgba(102, 126, 234, 0.1); margin-bottom: 20px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🔎 Buscar Jogadores</h3>
+                <div style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label class="form-label">Digite o identificador:</label>
+                        <input id="trackSearchInput" class="form-input" placeholder="Cole aqui o auth, IPv4 ou conn...">
+                    </div>
+                    <div style="min-width: 150px;">
+                        <label class="form-label">Tipo de busca:</label>
+                        <select id="trackSearchType" class="form-input">
+                            <option value="auth">🔑 Auth</option>
+                            <option value="ipv4">🌐 IPv4</option>
+                            <option value="conn">🔗 Conn</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="searchByIdentifier()" style="padding: 12px 24px;">
+                        🔎 Buscar Jogadores
+                    </button>
+                </div>
+                <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">
+                    💡 Cole aqui o auth, IPv4 ou conn de um jogador para encontrar todas as contas que usaram o mesmo identificador
+                </p>
+            </div>
+
+            <!-- RESULTADOS DA BUSCA -->
+            <div id="searchResults" style="margin-bottom: 30px;"></div>
+
+            <!-- ÚLTIMOS LOGINS -->
+            <h3 style="margin: 20px 0 15px 0; color: #667eea;">📋 Últimos Logins</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>Hora</th>
-                        <th>Nick</th>
-                        <th>Auth (trunc)</th>
-                        <th>IPv4</th>
-                        <th>Conn (trunc)</th>
-                        <th>Sala</th>
-                        <th>Ações</th>
+                        <th>⏰ Hora</th>
+                        <th>👤 Nick</th>
+                        <th>🔑 Auth</th>
+                        <th>🌐 IPv4</th>
+                        <th>🔗 Conn</th>
+                        <th>🎮 Sala</th>
+                        <th>⚙️ Ações</th>
                     </tr>
                 </thead>
                 <tbody id="recentLoginsTableBody">
-                    <tr><td colspan="7" class="no-data" style="text-align:center;">Carregando...</td></tr>
+                    <tr><td colspan="7" class="no-data" style="text-align:center;">Carregando últimos logins...</td></tr>
                 </tbody>
             </table>
-
-            <h3 style="margin: 20px 0 10px 0; color: #667eea;">📋 Resultados da Busca</h3>
-            <div id="searchResults"></div>
         </div>
     </div>
 
@@ -1382,57 +1399,132 @@
             const identifier = document.getElementById('trackSearchInput').value.trim();
             const type = document.getElementById('trackSearchType').value || 'auth';
             const container = document.getElementById('searchResults');
-            container.innerHTML = '';
-
+            
             if (!identifier) {
-                container.innerHTML = '<div class="no-data">Digite um identificador para buscar</div>';
+                container.innerHTML = `
+                    <div class="card" style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107;">
+                        <p style="margin: 0; color: #856404;">
+                            ⚠️ Digite um identificador para buscar (auth, IPv4 ou conn)
+                        </p>
+                    </div>
+                `;
                 return;
             }
 
             try {
-                container.innerHTML = '<div class="no-data">Buscando...</div>';
+                container.innerHTML = `
+                    <div class="card" style="background: rgba(102, 126, 234, 0.1);">
+                        <p style="margin: 0; color: #667eea;">
+                            🔍 Buscando jogadores com ${type.toUpperCase()}: ${identifier.substring(0, 20)}...
+                        </p>
+                    </div>
+                `;
+
                 const resp = await fetch(`${API_BASE_URL}/api/search_by_identifier?identifier=${encodeURIComponent(identifier)}&type=${encodeURIComponent(type)}`);
                 const data = await resp.json();
 
                 if (!data.success) {
-                    container.innerHTML = `<div class="no-data">${data.message || 'Erro na busca'}</div>`;
+                    container.innerHTML = `
+                        <div class="card" style="background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545;">
+                            <p style="margin: 0; color: #721c24;">
+                                ❌ Erro na busca: ${data.message || 'Erro desconhecido'}
+                            </p>
+                        </div>
+                    `;
                     return;
                 }
 
-                // Mostrar alertas
+                // Mostrar alertas de segurança
                 let html = '';
                 if (data.alerts && data.alerts.length) {
-                    html += data.alerts.map(a => `<div style="padding:8px; background:#fff3cd; border-left:4px solid #ffeeba; margin-bottom:8px;"><strong>Aviso:</strong> ${a.message}</div>`).join('');
+                    data.alerts.forEach(alert => {
+                        html += `
+                            <div class="card" style="background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 8px 0; color: #721c24;">🚨 ALERTA DE SEGURANÇA</h4>
+                                <p style="margin: 0; color: #721c24;">${alert.message}</p>
+                                ${alert.accounts ? `<p style="margin: 5px 0 0 0; color: #721c24;"><strong>Contas envolvidas:</strong> ${alert.accounts.join(', ')}</p>` : ''}
+                            </div>
+                        `;
+                    });
                 }
 
-                // results é um objeto { nick: [entries] }
+                // Mostrar resultados
                 const results = data.results || {};
                 const nicks = Object.keys(results);
+                
                 if (nicks.length === 0) {
-                    html += '<div class="no-data">Nenhum resultado encontrado</div>';
+                    html += `
+                        <div class="card" style="background: rgba(108, 117, 125, 0.1); border-left: 4px solid #6c757d;">
+                            <p style="margin: 0; color: #495057;">
+                                📝 Nenhum jogador encontrado com este ${type.toUpperCase()}
+                            </p>
+                        </div>
+                    `;
                 } else {
-                    html += '<div style="margin-top:8px;">';
-                    nicks.forEach(nick => {
-                        html += `<div style="border:1px solid #eee; padding:8px; margin-bottom:8px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;"><strong>${nick}</strong><div><button class="btn btn-sm" onclick="viewLoginHistory('${nick}')">👁️ Ver histórico</button></div></div>`;
+                    html += `
+                        <div class="card" style="background: rgba(40, 167, 69, 0.1); border-left: 4px solid #28a745; margin-bottom: 20px;">
+                            <h4 style="margin: 0 0 8px 0; color: #155724;">✅ RESULTADOS ENCONTRADOS</h4>
+                            <p style="margin: 0; color: #155724;">
+                                Encontrados <strong>${nicks.length} jogador(es)</strong> que usaram este ${type.toUpperCase()}: 
+                                <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px;">${identifier.substring(0, 30)}${identifier.length > 30 ? '...' : ''}</code>
+                            </p>
+                        </div>
+                    `;
 
-                        const rows = results[nick];
-                        html += '<div style="margin-top:6px;">' + rows.map(r => `
-                            <div style="font-family: monospace; margin-bottom:6px;">
-                                <div><strong>${new Date(r.login_time).toLocaleString('pt-BR')}</strong> - Sala: ${r.room_name || '-'}</div>
-                                <div>Auth: ${r.auth || '-'} | IPv4: ${r.ipv4 || '-'} | Conn: ${r.conn || '-'}</div>
+                    nicks.forEach((nick, index) => {
+                        const entries = results[nick];
+                        const firstEntry = entries[0];
+                        const totalLogins = entries.length;
+
+                        html += `
+                            <div class="card" style="margin-bottom: 15px; border: 1px solid #e9ecef;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <div>
+                                        <h4 style="margin: 0; color: #667eea;">👤 ${nick}</h4>
+                                        <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">
+                                            ${totalLogins} login(s) registrado(s) • Último: ${new Date(firstEntry.login_time).toLocaleString('pt-BR')}
+                                        </p>
+                                    </div>
+                                    <button class="btn btn-sm" onclick="viewLoginHistory('${nick}')">
+                                        👁️ Ver Histórico Completo
+                                    </button>
+                                </div>
+                                
+                                <div style="background: rgba(248, 249, 250, 0.8); padding: 15px; border-radius: 8px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                                        <div>
+                                            <strong style="color: #667eea;">🔑 Auth:</strong><br>
+                                            <code style="font-size: 0.85rem; word-break: break-all;">${firstEntry.auth || 'N/A'}</code>
+                                        </div>
+                                        <div>
+                                            <strong style="color: #667eea;">🌐 IPv4:</strong><br>
+                                            <code style="font-size: 0.85rem;">${firstEntry.ipv4 || 'N/A'}</code>
+                                        </div>
+                                        <div>
+                                            <strong style="color: #667eea;">🔗 Conn:</strong><br>
+                                            <code style="font-size: 0.85rem; word-break: break-all;">${firstEntry.conn || 'N/A'}</code>
+                                        </div>
+                                    </div>
+                                    <p style="margin: 0; color: #666; font-size: 0.85rem;">
+                                        🎮 Última sala: <strong>${firstEntry.room_name || 'Desconhecida'}</strong>
+                                    </p>
+                                </div>
                             </div>
-                        `).join('') + '</div>';
-
-                        html += '</div>';
+                        `;
                     });
-                    html += '</div>';
                 }
 
                 container.innerHTML = html;
+
             } catch (error) {
                 console.error('Erro na busca por identificador:', error);
-                container.innerHTML = '<div class="no-data">❌ Erro na busca</div>';
+                container.innerHTML = `
+                    <div class="card" style="background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545;">
+                        <p style="margin: 0; color: #721c24;">
+                            ❌ Erro de conexão: ${error.message || 'Falha ao conectar com o servidor'}
+                        </p>
+                    </div>
+                `;
             }
         }
 

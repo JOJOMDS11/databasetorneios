@@ -523,20 +523,6 @@
         </div>
     </div>
 
-    <!-- MODAL LOCALIZAÇÃO IP -->
-    <div id="ipLocationModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeIpLocationModal()">&times;</span>
-            <h2 style="color: #667eea; margin-bottom: 20px;">🌍 Localização do IP</h2>
-            <div id="ipLocationContent" style="text-align: left;">
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 2rem;">⏳</div>
-                    <p>Carregando informações...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL ADICIONAR VIP -->
     <div id="vipModal" class="modal">
         <div class="modal-content">
@@ -1381,133 +1367,20 @@
             copyToClipboard(ipv4);
         }
 
-        async function viewIpLocation(ipv4) {
+        function viewIpLocation(ipv4) {
             if (!ipv4 || ipv4 === '-') return alert('IPv4 não disponível');
             
-            const modal = document.getElementById('ipLocationModal');
-            const content = document.getElementById('ipLocationContent');
+            // Abre o meuip.com.br em um popup (janela menor)
+            const width = 900;
+            const height = 700;
+            const left = (screen.width / 2) - (width / 2);
+            const top = (screen.height / 2) - (height / 2);
             
-            // Mostra o modal com loading
-            content.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 2rem;">⏳</div>
-                    <p>Carregando informações do IP <strong>${ipv4}</strong>...</p>
-                </div>
-            `;
-            modal.style.display = 'block';
-            
-            try {
-                // Usa a API gratuita ip-api.com para geolocalização
-                const response = await fetch(`http://ip-api.com/json/${ipv4}?lang=pt&fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query`);
-                const data = await response.json();
-                
-                if (data.status === 'fail') {
-                    content.innerHTML = `
-                        <div style="text-align: center; padding: 20px;">
-                            <div style="font-size: 2rem; color: #d9534f;">❌</div>
-                            <p style="color: #d9534f;"><strong>Erro ao buscar localização</strong></p>
-                            <p>${data.message || 'IP inválido ou não encontrado'}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Mostra as informações formatadas
-                content.innerHTML = `
-                    <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
-                        <div style="text-align: center; margin-bottom: 15px;">
-                            <div style="font-size: 3rem; margin-bottom: 10px;">${getCountryFlag(data.countryCode)}</div>
-                            <h3 style="margin: 0; color: #667eea;">${data.city}, ${data.regionName}</h3>
-                            <p style="margin: 5px 0; color: #666;">${data.country}</p>
-                        </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">📍 IP</div>
-                            <div style="font-family: monospace; font-size: 1.1rem;">${data.query}</div>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">🏙️ Cidade</div>
-                            <div>${data.city || 'N/A'}</div>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">🗺️ Estado/Região</div>
-                            <div>${data.regionName} (${data.region})</div>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">🌐 País</div>
-                            <div>${data.country} (${data.countryCode})</div>
-                        </div>
-                        
-                        ${data.zip ? `
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">📮 CEP</div>
-                            <div>${data.zip}</div>
-                        </div>
-                        ` : ''}
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                            <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">🕐 Fuso Horário</div>
-                            <div>${data.timezone}</div>
-                        </div>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <div style="color: #667eea; font-weight: bold; margin-bottom: 5px;">🌐 Provedor (ISP)</div>
-                        <div style="margin-bottom: 5px;"><strong>${data.isp}</strong></div>
-                        ${data.org ? `<div style="color: #666; font-size: 0.9rem;">${data.org}</div>` : ''}
-                        ${data.as ? `<div style="color: #666; font-size: 0.85rem; margin-top: 5px;">${data.as}</div>` : ''}
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                        <div style="color: #667eea; font-weight: bold; margin-bottom: 10px;">📌 Coordenadas Geográficas</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                            <div>
-                                <span style="color: #666;">Latitude:</span> <strong>${data.lat}</strong>
-                            </div>
-                            <div>
-                                <span style="color: #666;">Longitude:</span> <strong>${data.lon}</strong>
-                            </div>
-                        </div>
-                        <a href="https://www.google.com/maps?q=${data.lat},${data.lon}" target="_blank" 
-                           style="display: inline-block; background: #667eea; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; margin-top: 5px;">
-                            🗺️ Ver no Google Maps
-                        </a>
-                    </div>
-                `;
-                
-            } catch (error) {
-                console.error('Erro ao buscar localização:', error);
-                content.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="font-size: 2rem; color: #d9534f;">❌</div>
-                        <p style="color: #d9534f;"><strong>Erro ao buscar localização</strong></p>
-                        <p>Não foi possível conectar ao serviço de geolocalização.</p>
-                    </div>
-                `;
-            }
-        }
-
-        function getCountryFlag(countryCode) {
-            const flags = {
-                'BR': '🇧🇷', 'US': '🇺🇸', 'PT': '🇵🇹', 'ES': '🇪🇸', 
-                'AR': '🇦🇷', 'CL': '🇨🇱', 'MX': '🇲🇽', 'CO': '🇨🇴',
-                'PE': '🇵🇪', 'VE': '🇻🇪', 'UY': '🇺🇾', 'PY': '🇵🇾',
-                'BO': '🇧🇴', 'EC': '🇪🇨', 'GT': '🇬🇹', 'CU': '🇨🇺',
-                'DO': '🇩🇴', 'HN': '🇭🇳', 'NI': '🇳🇮', 'SV': '🇸🇻',
-                'CR': '🇨🇷', 'PA': '🇵🇦', 'GB': '🇬🇧', 'FR': '🇫🇷',
-                'DE': '🇩🇪', 'IT': '🇮🇹', 'CA': '🇨🇦', 'AU': '🇦🇺',
-                'JP': '🇯🇵', 'CN': '🇨🇳', 'IN': '🇮🇳', 'RU': '🇷🇺'
-            };
-            return flags[countryCode] || '🌍';
-        }
-
-        function closeIpLocationModal() {
-            document.getElementById('ipLocationModal').style.display = 'none';
+            window.open(
+                `https://meuip.com.br/tools-geo.php?ip=${ipv4}`,
+                'IPLocation',
+                `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+            );
         }
 
         async function viewLoginHistory(nick) {

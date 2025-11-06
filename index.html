@@ -387,9 +387,35 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">📝 Logs do Sistema</div>
-                        <button onclick="loadSystemLogs()" class="btn">🔄 Atualizar</button>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <select id="logTypeFilter" class="form-control" style="width: 200px;">
+                                <option value="all">Todos os Eventos</option>
+                                <option value="MUDANCA_NICK">🔄 Mudança de Nick</option>
+                                <option value="BAN">🚫 Banimentos</option>
+                                <option value="UNBAN">✅ Desbanimentos</option>
+                                <option value="VIP">💎 VIPs</option>
+                            </select>
+                            <button onclick="loadSystemLogs()" class="btn">🔄 Atualizar</button>
+                        </div>
                     </div>
                     <div id="logsContent"></div>
+                </div>
+                
+                <!-- NOVA SEÇÃO: SUSPEITAS -->
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <div class="card-title">🔍 Detecção de Suspeitas</div>
+                        <button onclick="loadSuspiciousPlayers()" class="btn">🔄 Verificar</button>
+                    </div>
+                    <div id="suspiciousContent">
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">🔍</div>
+                            <p>Clique em "Verificar" para detectar jogadores suspeitos</p>
+                            <p style="font-size: 0.9rem; color: #999;">
+                                Sistema detecta jogadores diferentes usando mesmo Auth, IPv4 ou Conn
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -869,7 +895,13 @@
 
         async function loadSystemLogs() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/system_logs?limit=50`);
+                const filter = document.getElementById('logTypeFilter').value;
+                let url = `${API_BASE_URL}/api/system_logs?limit=100`;
+                if (filter !== 'all') {
+                    url += `&type=${filter}`;
+                }
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 console.log('Logs recebidos:', data); // Debug
                 const content = document.getElementById('logsContent');
@@ -891,11 +923,87 @@
                         </div>
                     `}).join('');
                 } else {
-                    content.innerHTML = '<div class="no-data">📝 Nenhum log do sistema encontrado</div>';
+                    content.innerHTML = '<div class="no-data">📝 Nenhum log encontrado para este filtro</div>';
                 }
             } catch (error) {
                 console.error('Erro ao carregar logs:', error);
                 document.getElementById('logsContent').innerHTML = '<div class="no-data">❌ Erro ao carregar logs</div>';
+            }
+        }
+
+        async function loadSuspiciousPlayers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/detect_suspicious`);
+                const data = await response.json();
+                console.log('Suspeitas detectadas:', data); // Debug
+                const content = document.getElementById('suspiciousContent');
+
+                if (data.success && data.suspicious && data.suspicious.length > 0) {
+                    const sameAuth = data.suspicious.filter(i => i.type === 'AUTH');
+                    const sameIpv4 = data.suspicious.filter(i => i.type === 'IPv4');
+                    const sameConn = data.suspicious.filter(i => i.type === 'CONN');
+
+                    let html = '';
+
+                    const renderSuspiciousGroup = (items, type, emoji, label) => {
+                        if (!items || items.length === 0) return '';
+
+                        const typeColor = {
+                            auth: '#ff6b6b',
+                            ipv4: '#ffa500',
+                            conn: '#f59e0b'
+                        };
+
+                        return `
+                            <div style="margin-bottom: 25px;">
+                                <h4 style="color: ${typeColor[type]}; margin-bottom: 15px;">${emoji} ${label}</h4>
+                                ${items.map(item => {
+                                    const severityColor = item.severity === 'high' ? '#dc2626' : 
+                                                         item.severity === 'medium' ? '#f59e0b' : '#fbbf24';
+                                    const severityLabel = item.severity === 'high' ? 'ALTA' : 
+                                                         item.severity === 'medium' ? 'MÉDIA' : 'BAIXA';
+                                    const lastSeen = item.last_seen ? new Date(item.last_seen).toLocaleString('pt-BR') : '-';
+
+                                    return `
+                                        <div class="log-item" style="border-left: 4px solid ${severityColor};">
+                                            <div class="log-header">
+                                                <div>
+                                                    <strong style="color: ${severityColor};">⚠️ GRAVIDADE ${severityLabel}</strong>
+                                                    <span style="color: #666; margin-left: 10px;">${type.toUpperCase()}: <code>${item.identifier}</code></span>
+                                                </div>
+                                                <span style="color: #999; font-size: 0.9rem;">${lastSeen}</span>
+                                            </div>
+                                            <div style="margin-top: 10px; color: #555;">
+                                                <strong>${item.account_count} contas diferentes</strong> usando o mesmo ${label.toLowerCase()}:
+                                                <div style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 5px;">
+                                                    ${ (item.nicks || []).map(nick => `<span style="background: #f0f0f0; padding: 3px 8px; border-radius: 3px; font-size: 0.9rem;">${nick}</span>`).join('') }
+                                                </div>
+                                                ${type === 'ipv4' ? `
+                                                    <div style="margin-top: 10px;">
+                                                        <button onclick="viewIpLocation('${item.identifier_full || item.identifier}')" class="btn" style="font-size: 0.85rem; padding: 5px 10px;">
+                                                            🌍 Ver Localização
+                                                        </button>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `;
+                    };
+
+                    html += renderSuspiciousGroup(sameAuth, 'auth', '🔐', 'Mesmo AUTH (Autenticação)');
+                    html += renderSuspiciousGroup(sameIpv4, 'ipv4', '🌐', 'Mesmo IPv4');
+                    html += renderSuspiciousGroup(sameConn, 'conn', '🔗', 'Mesma CONN (Conexão)');
+
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = '<div class="no-data">✅ Nenhuma atividade suspeita detectada no momento</div>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar suspeitas:', error);
+                document.getElementById('suspiciousContent').innerHTML = '<div class="no-data">❌ Erro ao carregar detecção de suspeitas</div>';
             }
         }
 

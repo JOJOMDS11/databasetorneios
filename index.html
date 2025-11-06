@@ -215,6 +215,7 @@
                 <button class="nav-tab" onclick="showTab('vips')">💎 VIPs</button>
                 <button class="nav-tab" onclick="showTab('coins')">🟣 Purple Coins</button>
                 <button class="nav-tab" onclick="showTab('stats')">📊 Stats GOATS</button>
+                <button class="nav-tab" onclick="showTab('tracking')">🔍 Rastreamento</button>
                 <button class="nav-tab" onclick="showTab('bans')">🚫 Banimentos</button>
                 <button class="nav-tab" onclick="showTab('history')">📋 Histórico</button>
                 <button class="nav-tab" onclick="showTab('logs')">📝 Logs</button>
@@ -438,6 +439,7 @@
                                 <th>Data/Hora</th>
                                 <th>Nick</th>
                                 <th>Discord</th>
+                                <th>🎮 Sala</th>
                                 <th>⚽ Gols</th>
                                 <th>🅰️ Assists</th>
                                 <th>🧤 CS</th>
@@ -447,11 +449,51 @@
                             </tr>
                         </thead>
                         <tbody id="matchHistoryTableBody">
-                            <tr><td colspan="9" style="text-align:center;">Carregando...</td></tr>
+                            <tr><td colspan="10" style="text-align:center;">Carregando...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- RASTREAMENTO -->
+    <div id="tracking" class="tab-content" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">🔍 Rastreamento de Logins</h2>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input id="trackSearchInput" class="form-input" style="width:320px;" placeholder="Digite auth / ipv4 / conn e pressione Buscar">
+                    <select id="trackSearchType" class="form-input" style="width:140px;">
+                        <option value="auth">Auth</option>
+                        <option value="ipv4">IPv4</option>
+                        <option value="conn">Conn</option>
+                    </select>
+                    <button class="btn" onclick="searchByIdentifier()">🔎 Buscar</button>
+                    <button class="btn" onclick="loadRecentLogins()">🔄 Carregar últimos</button>
+                </div>
+            </div>
+
+            <h3 style="margin: 20px 0 10px 0; color: #667eea;">📋 Últimos Logins</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Nick</th>
+                        <th>Auth (trunc)</th>
+                        <th>IPv4</th>
+                        <th>Conn (trunc)</th>
+                        <th>Sala</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="recentLoginsTableBody">
+                    <tr><td colspan="7" class="no-data" style="text-align:center;">Carregando...</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin: 20px 0 10px 0; color: #667eea;">📋 Resultados da Busca</h3>
+            <div id="searchResults"></div>
         </div>
     </div>
 
@@ -539,6 +581,7 @@
         let bannedData = [];
         let vipsData = [];
         let coinsData = [];
+    let recentLoginsCache = {}; // cache por id para copiar valores completos
         
         // Paginação
         let currentPage = { players: 1, bans: 1, coins: 1 };
@@ -1215,6 +1258,178 @@
             } catch (error) {
                 console.error('Erro ao exportar stats:', error);
                 alert('❌ Erro ao exportar stats');
+            }
+        }
+
+        // RASTREAMENTO - Carrega últimos logins
+        async function loadRecentLogins(limit = 100) {
+            const tbody = document.getElementById('recentLoginsTableBody');
+            try {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data" style="text-align:center;">Carregando...</td></tr>';
+                const resp = await fetch(`${API_BASE_URL}/api/get_recent_logins?limit=${limit}`);
+                const data = await resp.json();
+
+                if (!data.success || !data.logins) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="no-data">Nenhum login encontrado</td></tr>';
+                    return;
+                }
+
+                recentLoginsCache = {};
+                tbody.innerHTML = '';
+
+                data.logins.forEach(login => {
+                    recentLoginsCache[login.id] = login; // guarda objeto completo
+
+                    const tr = document.createElement('tr');
+                    const time = new Date(login.login_time).toLocaleString('pt-BR');
+
+                    tr.innerHTML = `
+                        <td>${time}</td>
+                        <td><strong>${login.haxball_nick}</strong></td>
+                        <td style="font-family: monospace;">${login.auth || '-'}</td>
+                        <td style="font-family: monospace;">${login.ipv4 || '-'}</td>
+                        <td style="font-family: monospace;">${login.conn || '-'}</td>
+                        <td>${login.room_name || '-'}</td>
+                        <td style="white-space:nowrap;">
+                            <button class="btn btn-sm" onclick="copyFullAuth(${login.id})">📋 Copiar Auth</button>
+                            <button class="btn btn-sm" onclick="copyFullConn(${login.id})">📋 Copiar Conn</button>
+                            <button class="btn btn-sm" onclick="viewLoginHistory('${login.haxball_nick}')">👁️ Ver</button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar últimos logins:', error);
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">❌ Erro ao carregar últimos logins</td></tr>';
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (!text) return alert('Valor vazio');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => alert('✅ Copiado para a área de transferência'))
+                    .catch(() => alert('❌ Falha ao copiar'));
+            } else {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    alert('✅ Copiado para a área de transferência');
+                } catch (e) {
+                    alert('❌ Falha ao copiar');
+                }
+                document.body.removeChild(ta);
+            }
+        }
+
+        function copyFullAuth(id) {
+            const entry = recentLoginsCache[id];
+            if (!entry) return alert('Entrada não encontrada');
+            copyToClipboard(entry.auth_full || entry.auth || '');
+        }
+
+        function copyFullConn(id) {
+            const entry = recentLoginsCache[id];
+            if (!entry) return alert('Entrada não encontrada');
+            copyToClipboard(entry.conn_full || entry.conn || '');
+        }
+
+        async function viewLoginHistory(nick) {
+            try {
+                const resp = await fetch(`${API_BASE_URL}/api/get_login_history?nick=${encodeURIComponent(nick)}&limit=50`);
+                const data = await resp.json();
+                if (!data.success) return alert('Erro ao carregar histórico');
+
+                const modal = document.getElementById('playerModal');
+                const title = document.getElementById('playerModalTitle');
+                const content = document.getElementById('playerModalContent');
+
+                title.textContent = `Histórico de Logins: ${nick}`;
+                if (!data.logs || data.logs.length === 0) {
+                    content.innerHTML = '<div class="no-data">Nenhum registro encontrado</div>';
+                } else {
+                    content.innerHTML = data.logs.map(l => `
+                        <div class="log-item">
+                            <div class="log-header"><strong>${new Date(l.login_time).toLocaleString('pt-BR')}</strong> - Sala: ${l.room_name || '-'} </div>
+                            <div style="font-family: monospace; margin-top:6px;">Auth: ${l.auth}</div>
+                            <div style="font-family: monospace;">IPv4: ${l.ipv4}</div>
+                            <div style="font-family: monospace;">Conn: ${l.conn}</div>
+                        </div>
+                    `).join('');
+
+                    if (data.suspicious && data.suspicious.length) {
+                        content.innerHTML += `<div style="margin-top:12px; color:#d9534f;"><strong>Atenção:</strong> Foram detectadas mudanças suspeitas entre logins.</div>`;
+                    }
+                }
+
+                modal.style.display = 'block';
+            } catch (error) {
+                console.error('Erro ao buscar histórico de login:', error);
+                alert('❌ Erro ao buscar histórico');
+            }
+        }
+
+        // RASTREAMENTO - Buscar por identifier (auth/ipv4/conn)
+        async function searchByIdentifier() {
+            const identifier = document.getElementById('trackSearchInput').value.trim();
+            const type = document.getElementById('trackSearchType').value || 'auth';
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+
+            if (!identifier) {
+                container.innerHTML = '<div class="no-data">Digite um identificador para buscar</div>';
+                return;
+            }
+
+            try {
+                container.innerHTML = '<div class="no-data">Buscando...</div>';
+                const resp = await fetch(`${API_BASE_URL}/api/search_by_identifier?identifier=${encodeURIComponent(identifier)}&type=${encodeURIComponent(type)}`);
+                const data = await resp.json();
+
+                if (!data.success) {
+                    container.innerHTML = `<div class="no-data">${data.message || 'Erro na busca'}</div>`;
+                    return;
+                }
+
+                // Mostrar alertas
+                let html = '';
+                if (data.alerts && data.alerts.length) {
+                    html += data.alerts.map(a => `<div style="padding:8px; background:#fff3cd; border-left:4px solid #ffeeba; margin-bottom:8px;"><strong>Aviso:</strong> ${a.message}</div>`).join('');
+                }
+
+                // results é um objeto { nick: [entries] }
+                const results = data.results || {};
+                const nicks = Object.keys(results);
+                if (nicks.length === 0) {
+                    html += '<div class="no-data">Nenhum resultado encontrado</div>';
+                } else {
+                    html += '<div style="margin-top:8px;">';
+                    nicks.forEach(nick => {
+                        html += `<div style="border:1px solid #eee; padding:8px; margin-bottom:8px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;"><strong>${nick}</strong><div><button class="btn btn-sm" onclick="viewLoginHistory('${nick}')">👁️ Ver histórico</button></div></div>`;
+
+                        const rows = results[nick];
+                        html += '<div style="margin-top:6px;">' + rows.map(r => `
+                            <div style="font-family: monospace; margin-bottom:6px;">
+                                <div><strong>${new Date(r.login_time).toLocaleString('pt-BR')}</strong> - Sala: ${r.room_name || '-'}</div>
+                                <div>Auth: ${r.auth || '-'} | IPv4: ${r.ipv4 || '-'} | Conn: ${r.conn || '-'}</div>
+                            </div>
+                        `).join('') + '</div>';
+
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Erro na busca por identificador:', error);
+                container.innerHTML = '<div class="no-data">❌ Erro na busca</div>';
             }
         }
 

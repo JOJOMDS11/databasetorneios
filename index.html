@@ -1313,6 +1313,8 @@
                         <td>${login.room_name || '-'}</td>
                         <td style="white-space:nowrap;">
                             <button class="btn btn-sm" onclick="copyFullAuth(${login.id})">📋 Copiar Auth</button>
+                            <button class="btn btn-sm" onclick="copyIpv4('${login.ipv4}')">📋 IPv4</button>
+                            <button class="btn btn-sm" onclick="viewIpLocation('${login.ipv4}')" title="Ver localização do IP">🌍 Localização</button>
                             <button class="btn btn-sm" onclick="copyFullConn(${login.id})">📋 Copiar Conn</button>
                             <button class="btn btn-sm" onclick="viewLoginHistory('${login.haxball_nick}')">👁️ Ver</button>
                         </td>
@@ -1360,6 +1362,17 @@
             copyToClipboard(entry.conn_full || entry.conn || '');
         }
 
+        function copyIpv4(ipv4) {
+            if (!ipv4 || ipv4 === '-') return alert('IPv4 não disponível');
+            copyToClipboard(ipv4);
+        }
+
+        function viewIpLocation(ipv4) {
+            if (!ipv4 || ipv4 === '-') return alert('IPv4 não disponível');
+            // Abre o meuip.com.br com o IP específico em nova aba
+            window.open(`https://meuip.com.br/tools-geo.php?ip=${ipv4}`, '_blank');
+        }
+
         async function viewLoginHistory(nick) {
             try {
                 const resp = await fetch(`${API_BASE_URL}/api/get_login_history?nick=${encodeURIComponent(nick)}&limit=50`);
@@ -1378,7 +1391,11 @@
                         <div class="log-item">
                             <div class="log-header"><strong>${new Date(l.login_time).toLocaleString('pt-BR')}</strong> - Sala: ${l.room_name || '-'} </div>
                             <div style="font-family: monospace; margin-top:6px;">Auth: ${l.auth}</div>
-                            <div style="font-family: monospace;">IPv4: ${l.ipv4}</div>
+                            <div style="font-family: monospace;">
+                                IPv4: ${l.ipv4} 
+                                <button class="btn btn-sm" onclick="copyIpv4('${l.ipv4}')" style="margin-left: 8px;">📋</button>
+                                <button class="btn btn-sm" onclick="viewIpLocation('${l.ipv4}')" style="margin-left: 4px;">🌍 Ver Local</button>
+                            </div>
                             <div style="font-family: monospace;">Conn: ${l.conn}</div>
                         </div>
                     `).join('');
@@ -1581,6 +1598,7 @@
                                         <div>
                                             <strong style="color: #667eea;">🌐 IPv4:</strong><br>
                                             <code style="font-size: 0.85rem;">${firstEntry.ipv4 || 'N/A'}</code>
+                                            ${firstEntry.ipv4 ? `<br><button class="btn btn-sm" onclick="viewIpLocation('${firstEntry.ipv4}')" style="margin-top: 5px;">🌍 Ver Localização</button>` : ''}
                                         </div>
                                         <div>
                                             <strong style="color: #667eea;">🔗 Conn:</strong><br>

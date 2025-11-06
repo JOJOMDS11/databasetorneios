@@ -410,6 +410,7 @@
                         <div class="card-title">⚠️ Detecção de Contas Suspeitas</div>
                         <div style="display: flex; gap: 10px;">
                             <button onclick="loadSuspiciousPlayers()" class="btn">🔄 Verificar</button>
+                            <button onclick="showIgnoredModal()" class="btn" style="background: #667eea;">📋 Gerenciar Ignorados</button>
                             <button onclick="clearOldSuspiciousData()" class="btn" style="background: #f59e0b;">🧹 Limpar Visualização</button>
                         </div>
                     </div>
@@ -621,6 +622,22 @@
                 </select>
             </div>
             <button onclick="giftVip()" class="btn btn-success" style="width: 100%;">🎁 Confirmar Doação</button>
+        </div>
+    </div>
+
+    <!-- MODAL GERENCIAR SUSPEITAS IGNORADAS -->
+    <div id="ignoredModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <span class="close" onclick="closeIgnoredModal()">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 20px;">📋 Suspeitas Ignoradas</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                Lista de suspeitas que você marcou como "Mesma Rede/Família". Clique em "Remover" para voltar a ver nas verificações.
+            </p>
+            <div id="ignoredContent" style="max-height: 500px; overflow-y: auto;">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    Carregando...
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1867,6 +1884,114 @@
             `;
         }
 
+        async function showIgnoredModal() {
+            const modal = document.getElementById('ignoredModal');
+            modal.style.display = 'block';
+            await loadIgnoredList();
+        }
+
+        function closeIgnoredModal() {
+            document.getElementById('ignoredModal').style.display = 'none';
+        }
+
+        async function loadIgnoredList() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/get_ignored_suspicious`);
+                const data = await response.json();
+                const content = document.getElementById('ignoredContent');
+
+                if (data.success && data.ignored && data.ignored.length > 0) {
+                    let html = '<table style="width: 100%; border-collapse: collapse;">';
+                    html += `
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                <th style="padding: 12px; text-align: left;">Tipo</th>
+                                <th style="padding: 12px; text-align: left;">Identificador</th>
+                                <th style="padding: 12px; text-align: left;">Motivo</th>
+                                <th style="padding: 12px; text-align: left;">Data</th>
+                                <th style="padding: 12px; text-align: center;">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    data.ignored.forEach(item => {
+                        const typeEmoji = item.identifier_type === 'auth' ? '🔐' : 
+                                        item.identifier_type === 'ipv4' ? '🌐' : '🔗';
+                        const typeLabel = item.identifier_type.toUpperCase();
+                        const identifier = item.identifier_value.substring(0, 40) + (item.identifier_value.length > 40 ? '...' : '');
+                        const ignoredDate = new Date(item.ignored_at).toLocaleString('pt-BR');
+
+                        html += `
+                            <tr style="border-bottom: 1px solid #e9ecef;">
+                                <td style="padding: 12px;">
+                                    <span style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;">
+                                        ${typeEmoji} ${typeLabel}
+                                    </span>
+                                </td>
+                                <td style="padding: 12px;">
+                                    <code style="font-size: 0.85rem; word-break: break-all;">${identifier}</code>
+                                </td>
+                                <td style="padding: 12px; color: #666;">${item.reason || 'Não especificado'}</td>
+                                <td style="padding: 12px; color: #999; font-size: 0.85rem;">${ignoredDate}</td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <button onclick="removeIgnored(${item.id})" class="btn" style="background: #dc2626; font-size: 0.85rem; padding: 6px 12px;">
+                                        🗑️ Remover
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    html += '</tbody></table>';
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+                            <p>Nenhuma suspeita ignorada</p>
+                            <p style="font-size: 0.9rem; color: #999;">
+                                Suspeitas ignoradas aparecerão aqui
+                            </p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar ignorados:', error);
+                document.getElementById('ignoredContent').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc2626;">
+                        ❌ Erro ao carregar lista
+                    </div>
+                `;
+            }
+        }
+
+        async function removeIgnored(id) {
+            if (!confirm('Remover esta suspeita da lista de ignorados?\n\nEla voltará a aparecer nas próximas verificações.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/remove_ignored_suspicious`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('✅ Removido com sucesso!');
+                    await loadIgnoredList(); // Recarrega a lista
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao remover ignorado:', error);
+                alert('❌ Erro ao conectar com o servidor');
+            }
+        }
+
         // Login com Enter
         document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
@@ -1876,6 +2001,13 @@
         document.getElementById('trackSearchInput')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchByIdentifier();
         });
+
+        // Fechar modais ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>

@@ -217,6 +217,7 @@
                 <button class="nav-tab" onclick="showTab('stats')">📊 Stats GOATS</button>
                 <button class="nav-tab" onclick="showTab('tracking')">🔍 Rastreamento</button>
                 <button class="nav-tab" onclick="showTab('bans')">🚫 Banimentos</button>
+                <button class="nav-tab" onclick="showTab('suspicious')">⚠️ Suspeitas</button>
                 <button class="nav-tab" onclick="showTab('history')">📋 Histórico</button>
                 <button class="nav-tab" onclick="showTab('logs')">📝 Logs</button>
             </div>
@@ -400,12 +401,17 @@
                     </div>
                     <div id="logsContent"></div>
                 </div>
-                
-                <!-- NOVA SEÇÃO: SUSPEITAS -->
-                <div class="card" style="margin-top: 20px;">
+            </div>
+
+            <!-- SUSPEITAS -->
+            <div id="suspicious" class="tab-content">
+                <div class="card">
                     <div class="card-header">
-                        <div class="card-title">🔍 Detecção de Suspeitas</div>
-                        <button onclick="loadSuspiciousPlayers()" class="btn">🔄 Verificar</button>
+                        <div class="card-title">⚠️ Detecção de Contas Suspeitas</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="loadSuspiciousPlayers()" class="btn">🔄 Verificar</button>
+                            <button onclick="clearOldSuspiciousData()" class="btn" style="background: #dc2626;">🗑️ Limpar Dados Antigos</button>
+                        </div>
                     </div>
                     <div id="suspiciousContent">
                         <div style="text-align: center; padding: 40px; color: #666;">
@@ -675,6 +681,7 @@
                                             tabName === 'vips' ? 'VIPs' : 
                                             tabName === 'bans' ? 'Banimentos' : 
                                             tabName === 'tracking' ? 'Rastreamento' :
+                                            tabName === 'suspicious' ? 'Suspeitas' :
                                             tabName === 'history' ? 'Histórico' : 'Logs')) {
                     btn.classList.add('active');
                 }
@@ -688,6 +695,7 @@
             if (tabName === 'bans') loadBannedPlayers();
             if (tabName === 'history') loadPlayerHistory();
             if (tabName === 'logs') loadSystemLogs();
+            if (tabName === 'suspicious') loadSuspiciousPlayers();
         }
 
         // CARREGAR DADOS
@@ -975,8 +983,23 @@
                                             </div>
                                             <div style="margin-top: 10px; color: #555;">
                                                 <strong>${item.account_count} contas diferentes</strong> usando o mesmo ${label.toLowerCase()}:
-                                                <div style="margin-top: 5px; display: flex; flex-wrap: wrap; gap: 5px;">
-                                                    ${ (item.nicks || []).map(nick => `<span style="background: #f0f0f0; padding: 3px 8px; border-radius: 3px; font-size: 0.9rem;">${nick}</span>`).join('') }
+                                                <div style="margin-top: 10px;">
+                                                    ${(item.discord_ids || []).map((discordId, idx) => {
+                                                        const nick = (item.nicks || [])[idx] || 'Desconhecido';
+                                                        return `
+                                                            <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid ${severityColor};">
+                                                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                                    <div>
+                                                                        <strong>Nick Atual:</strong> ${nick}
+                                                                        <span style="color: #999; margin-left: 10px; font-size: 0.85rem;">Discord ID: ${discordId}</span>
+                                                                    </div>
+                                                                    <button onclick="viewNickHistory('${nick}')" class="btn" style="font-size: 0.8rem; padding: 4px 8px;">
+                                                                        📋 Histórico de Nicks
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    }).join('')}
                                                 </div>
                                                 ${type === 'ipv4' ? `
                                                     <div style="margin-top: 10px;">
@@ -1746,6 +1769,29 @@
             }
         }
 
+        async function clearOldSuspiciousData() {
+            if (!confirm('⚠️ Tem certeza que deseja limpar dados antigos de login?\n\nIsso irá deletar logins com mais de 30 dias do banco de dados para evitar sobrecarga.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/clear_old_logins`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`✅ ${data.deleted_count} registros antigos foram removidos!`);
+                    loadSuspiciousPlayers(); // Recarrega as suspeitas
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao limpar dados:', error);
+                alert('❌ Erro ao conectar com o servidor');
+            }
+        }
+
         // Login com Enter
         document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
@@ -1758,3 +1804,4 @@
     </script>
 </body>
 </html>
+vv

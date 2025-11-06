@@ -1977,17 +1977,15 @@
         }
 
         async function clearOldSuspiciousData() {
-            if (!confirm('⚠️ Deseja limpar a visualização ou remover suspeitas ignoradas?\n\nEscolha "OK" para apenas limpar a tela\nou "Cancelar" e use o botão "Gerenciar Ignorados" para ver/remover ignorados.')) {
-                return;
-            }
-            
             // Apenas limpa a visualização, NÃO deleta nada do banco
+            allSuspicious = [];
+            currentSuspiciousPage = 1;
             document.getElementById('suspiciousContent').innerHTML = `
                 <div style="text-align: center; padding: 40px; color: #666;">
                     <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
                     <p>Visualização limpa!</p>
                     <p style="font-size: 0.9rem; color: #999;">
-                        Clique em "Verificar" para carregar novamente
+                        Clique em "🔍 Verificar Suspeitas" para carregar novamente
                     </p>
                 </div>
             `;
@@ -2009,6 +2007,8 @@
                 const data = await response.json();
                 const content = document.getElementById('ignoredContent');
 
+                console.log('Dados recebidos do backend:', data); // DEBUG
+
                 if (data.success && data.ignored && data.ignored.length > 0) {
                     let html = '<table style="width: 100%; border-collapse: collapse;">';
                     html += `
@@ -2026,6 +2026,9 @@
                     `;
 
                     data.ignored.forEach(item => {
+                        console.log('Item:', item); // DEBUG
+                        console.log('Players:', item.players); // DEBUG
+
                         const typeEmoji = item.identifier_type === 'auth' ? '🔐' : 
                                         item.identifier_type === 'ipv4' ? '🌐' : '🔗';
                         const typeLabel = item.identifier_type.toUpperCase();
@@ -2051,6 +2054,7 @@
                                 </div>
                             `).join('');
                         } else {
+                            console.log('Nenhum player encontrado para este item'); // DEBUG
                             playersHtml = '<span style="color: #999; font-size: 0.85rem;">Sem dados</span>';
                         }
 
